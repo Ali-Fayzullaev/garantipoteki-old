@@ -1,7 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata } from "next"; 
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
-import Image from "next/image";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -66,7 +65,7 @@ export default function RootLayout({
               t.src=v;s=b.getElementsByTagName(e)[0];
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', '730376586262942');
+              fbq('init', '1341098146860774');  // Ваш ID пикселя
               fbq('track', 'PageView');
             `,
           }}
@@ -76,15 +75,13 @@ export default function RootLayout({
             height="1" 
             width="1" 
             style={{ display: 'none' }}
-            src="https://www.facebook.com/tr?id=730376586262942&ev=PageView&noscript=1"
+            src="https://www.facebook.com/tr?id=1341098146860774&ev=PageView&noscript=1"
             alt=""
           />
         </noscript>
         {/* End Meta Pixel Code */}
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body>
         {children}
       </body>
     </html>
