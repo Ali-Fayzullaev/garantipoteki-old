@@ -1,137 +1,177 @@
-//src/app/page.tsx
+// src/app/city/[slug]/page.tsx
 "use client";
+
+import { useState, use } from "react"; // Добавляем use
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { createDeal, getServices, updateDeal, updateTxt } from "@/api/api";
 import LeadForm from "@/components/LeadForm";
 
-type ServiceType = {
-  id: number;
-  company_id: number;
-  name: string;
-  order_number: number;
+// Конфигурация городов
+const CITY_CONFIG = {
+  kokshetau: {
+    code: "fk8aEdbg",
+    name: "Кокшетау",
+    title: "GARANT IPOTEKI - Кокшетау",
+  },
+  // Добавьте другие города здесь
 };
 
-function formatPhone(value: string) {
-  let digits = value.replace(/\D/g, "");
-  if (!digits.startsWith("7")) digits = "7" + digits;
-  let formatted = "+7 ";
-  if (digits.length > 1) formatted += digits.slice(1, 4);
-  if (digits.length > 4) formatted += " " + digits.slice(4, 7);
-  if (digits.length > 7) formatted += "-" + digits.slice(7, 9);
-  if (digits.length > 9) formatted += "-" + digits.slice(9, 11);
-  return formatted;
+interface CityPageProps {
+  params: {
+    slug: string;
+  };
 }
 
-function formatPhoneNumber(phone: string): string {
-  return phone.replace(/\D/g, "");
+// Карточка офиса
+interface OfficeCardProps {
+  city: string;
+  address: string;
+  phone: string;
+  color: string;
+  mapLink: string;
 }
 
-export default function Home() {
+const OfficeCard = ({
+  city,
+  address,
+  phone,
+  color,
+  mapLink,
+}: OfficeCardProps) => {
+  return (
+    <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl p-8 shadow-xl shadow-[#f6dc49]/70 hover:shadow-2xl transition-all duration-500 w-80 h-64 group overflow-hidden border-l-4 border-[#da6d2a] relative">
+      <div
+        className={`absolute top-0 right-0 w-20 h-20 rounded-full ${
+          color === "brandYellow" ? "bg-brandYellow/20" : "bg-brandOrange/20"
+        } -translate-y-10 translate-x-10 group-hover:scale-110 transition-transform duration-500`}
+      ></div>
+
+      <div className="relative z-10 h-full flex flex-col justify-between">
+        <div>
+          <div className="flex items-center gap-3 mb-3">
+            <div
+              className={`w-4 h-4 rounded-full ${
+                color === "brandYellow" ? "bg-brandYellow" : "bg-brandOrange"
+              } shadow-lg`}
+            ></div>
+            <h3 className="text-xl font-bold text-[#da6d2a]">{city}</h3>
+          </div>
+
+          <div className="flex items-start gap-3 mb-3">
+            <span className="text-brandOrange text-lg mt-1">📍</span>
+            <p className="text-gray-700 text-sm leading-relaxed flex-1">
+              {address}
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <div className="mb-3">
+            <a
+              href={mapLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 text-brandOrange font-semibold hover:text-brandYellow transition-colors duration-200 text-sm"
+            >
+              <span className="text-lg">✅</span>
+              <span>Найти на карте</span>
+            </a>
+          </div>
+
+          <a
+            href={`tel:${phone}`}
+            className="inline-flex items-center gap-3 text-brandOrange font-semibold hover:text-brandYellow transition-colors duration-200 text-sm group/phone"
+          >
+            <span className="text-lg">📞</span>
+            <span className="group-hover/phone:translate-x-1 transition-transform duration-300">
+              {phone}
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Карточка менеджера
+interface ManagerCardProps {
+  name: string;
+  position: string;
+  experience: string;
+  photo: string;
+}
+
+const ManagerCard = ({
+  name,
+  position,
+  experience,
+  photo,
+}: ManagerCardProps) => {
+  return (
+    <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 group overflow-hidden border-l-4 border-[#da6d2a] relative w-80 h-80">
+      <div className="absolute top-0 right-0 w-16 h-16 rounded-full bg-brandYellow/20 -translate-y-8 translate-x-8 group-hover:scale-110 transition-transform duration-500"></div>
+
+      <div className="relative z-10 text-center h-full flex flex-col justify-center">
+        <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-brandYellow to-brandOrange p-1 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+          <Image
+            src={photo}
+            alt={name}
+            width={96}
+            height={96}
+            className="w-full h-full rounded-full object-cover"
+          />
+        </div>
+        <h3 className="text-xl font-bold text-[#da6d2a] mb-2 group-hover:scale-105 transition-transform duration-300">
+          {name}
+        </h3>
+        <p className="text-brandOrange font-semibold mb-3 text-sm">
+          {position}
+        </p>
+        <div className="flex items-center justify-center gap-2 text-gray-600 text-sm">
+          <span className="text-brandOrange">⏱️</span>
+          <span>{experience}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default function CityPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  // Разворачиваем params с помощью use()
+  const resolvedParams = use(params);
+  const slug = resolvedParams.slug;
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
   const [isThankYouModalOpen, setIsThankYouModalOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: "", phone: "" });
-  const [isLoading, setIsLoading] = useState(false);
-  const [step, setStep] = useState(1); // 1: форма, 2: выбор услуги, 3: успех
-  const [dealId, setDealId] = useState<string | null>(null);
-  const [services, setServices] = useState<ServiceType[]>([]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    try {
-      const deal = await createDeal({
-        name: formData.name,
-        phone_number: formatPhoneNumber(formData.phone),
-      });
-      setDealId(deal.id);
-      const services = await getServices();
-      setServices(services);
+  const cityConfig = CITY_CONFIG[slug as keyof typeof CITY_CONFIG];
 
-      setIsLoading(false);
-      setStep(2);
-    } catch (e) {
-      setIsLoading(false);
-      // Показываем ошибку или продолжаем
-      setStep(2);
-    }
-  };
-
-  const handleServiceSelect = async (service_id: number, service: string) => {
-    if (!dealId) {
-      setStep(1);
-      return;
-    }
-    setIsLoading(true);
-    try {
-      await updateDeal(
-        {
-          service_id: service_id,
-          phone_number: formatPhoneNumber(formData.phone),
-        },
-        dealId
-      );
-
-      try {
-        await updateTxt({
-          name: formData.name,
-          phone: formData.phone,
-          service: service,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-
-      // Отслеживание события Facebook Pixel
-      if (typeof window !== "undefined" && (window as any).fbq) {
-        (window as any).fbq("track", "Lead", {
-          content_name: service,
-          content_category: "form_submission",
-        });
-      }
-
-      setIsLoading(false);
-      setStep(3);
-      setTimeout(() => {
-        setIsModalOpen(false);
-        setStep(1);
-        setFormData({ name: "", phone: "" });
-        // Показываем модальное окно с благодарностью через 1.5 секунды
-        setTimeout(() => {
-          setIsThankYouModalOpen(true);
-        }, 1500);
-      }, 2000);
-    } catch (e) {
-      setIsLoading(false);
-      // Показываем ошибку или продолжаем
-      setStep(3);
-      setTimeout(() => {
-        setIsModalOpen(false);
-        setStep(1);
-        setFormData({ name: "", phone: "" });
-        setTimeout(() => {
-          setIsThankYouModalOpen(true);
-        }, 1500);
-      }, 2000);
-    }
-  };
+  if (!cityConfig) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            Город не найден
+          </h1>
+          <p className="text-gray-600">Пожалуйста, проверьте ссылку</p>
+        </div>
+      </div>
+    );
+  }
 
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setStep(1);
-    setFormData({ name: "", phone: "" });
-  };
-
+  const closeModal = () => setIsModalOpen(false);
   const openPrivacyModal = () => setIsPrivacyModalOpen(true);
   const closePrivacyModal = () => setIsPrivacyModalOpen(false);
-
   const openThankYouModal = () => setIsThankYouModalOpen(true);
   const closeThankYouModal = () => setIsThankYouModalOpen(false);
 
@@ -178,7 +218,8 @@ export default function Home() {
           className="absolute right-1/4 bottom-0 w-[420px] h-[420px] bg-brandOrange/20 rounded-full blur-3xl opacity-50"
         />
       </motion.div>
-      {/* --- Фиксированная полупрозрачная шапка с логотипом --- */}
+
+      {/* Фиксированная шапка */}
       <header
         className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur border-b border-gray-100 flex items-center justify-between px-8"
         style={{ height: "56px" }}
@@ -200,9 +241,9 @@ export default function Home() {
           Оставить заявку
         </button>
       </header>
-      {/* Hero-блок: видео слева (десктоп), текст справа и по центру, на мобилке видео после текста */}
+
+      {/* Hero-блок */}
       <section className="flex flex-col md:flex-row items-start justify-start min-h-[70vh] py-20 text-center relative gap-10 md:gap-0">
-        {/* Фоновые изображения клиентов */}
         <div className="absolute inset-0 z-0">
           <Image
             src="/3.jpg"
@@ -234,7 +275,7 @@ export default function Home() {
             className="text-2xl md:text-4xl font-semibold mb-4 text-gray-900 text-center w-full"
             style={{ fontFamily: "Montserrat, Arial, sans-serif" }}
           >
-            Кредиты и ипотека под ключ
+            Кредиты и ипотека под ключ - {cityConfig.name}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -283,59 +324,26 @@ export default function Home() {
           </div>
         </div>
       </section>
+
       {/* Блок с адресами офисов */}
       <section className="py-20 bg-gradient-to-br from-brandYellow/20 via-brandOrange/20 to-brandYellow/30 relative">
         <div className="container mx-auto px-4 relative z-10">
           <h2 className="text-3xl font-bold mb-10 text-gray-900 text-center">
-            Наши офисы
+            Наши офисы - {cityConfig.name}
           </h2>
           <div className="flex flex-wrap justify-center gap-10">
-            <OfficeCard
-              city="Астана"
-              address="Бауыржан Момышулы 2/5, БЦ «ОРДА», 2 блок, 2 этаж"
-              phone="+7 700 045 1202"
-              color="brandOrange"
-              mapLink="https://go.2gis.com/pRU01"
-            />
-            <OfficeCard
-              city="Астана"
-              address="Улица Сыганак, 54а, 112 офис; 1 этаж - БЦ А-Бизнес"
-              phone="+7 700 045 1202"
-              color="brandYellow"
-              mapLink="https://go.2gis.com/jfIyd"
-            />
-            <OfficeCard
-              city="Костанай"
-              address="БЦ Атриум ​Проспект Аль-Фараби, 74​1, 8 офис; 1 этаж"
-              phone="+7 777 043 89 12"
-              color="brandYellow"
-              mapLink="https://go.2gis.com/oqJeX"
-            />
-            <OfficeCard
-              city="Рудный"
-              address="Космонавтов 8, вход со стороны ЦОНа"
-              phone="+7 777 043 89 12"
-              color="brandOrange"
-              mapLink="https://go.2gis.com/moFj0"
-            />
-            <OfficeCard
-              city="Петропавловск"
-              address="Сутюшева 60, БЦ «Квартал», 3 этаж, кабинет 3.14"
-              phone="+7 708 153 7750"
-              color="brandYellow"
-              mapLink="https://go.2gis.com/xSuoa"
-            />
-            <OfficeCard
-              city="Кокшетау"
-              address="Н.Назарбаева 29Б, 4 этаж, кабинет 406"
-              phone="+7 700 482 4545"
-              color="brandOrange"
-              mapLink="https://go.2gis.com/xH89z"
-            />
+            {slug === "kokshetau" && (
+              <OfficeCard
+                city="Кокшетау"
+                address="Н.Назарбаева 29Б, 4 этаж, кабинет 406"
+                phone="+7 700 482 4545"
+                color="brandYellow"
+                mapLink="https://go.2gis.com/xH89z"
+              />
+            )}
           </div>
         </div>
       </section>
-      
       {/* Блок 3 — Карусель с менеджерами */}
       <section className="py-12">
         <h2 className="text-3xl font-bold mb-8 text-gray-900 text-center">
@@ -465,13 +473,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Блок 5 — Лид-форма */}
+      {/* Блок с формой */}
       <section id="leadform" className="py-16 flex flex-col items-center">
         <h2 className="text-3xl font-bold mb-8 text-gray-900 text-center">
-          Бесплатная консультация
+          Бесплатная консультация в {cityConfig.name}
         </h2>
-        <LeadForm onSuccess={openThankYouModal} />
+        <LeadForm onSuccess={openThankYouModal} cityCode={cityConfig.code} />
       </section>
+
       {/* Блок 5 — Почему выбирают нас */}
       <section className="py-12">
         <div className="max-w-6xl mx-auto px-8">
@@ -748,7 +757,7 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Модальное окно - используем LeadForm */}
+      {/* Модальное окно */}
       <AnimatePresence>
         {isModalOpen && (
           <motion.div
@@ -765,11 +774,12 @@ export default function Home() {
               className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <LeadForm onSuccess={closeModal} />
+              <LeadForm onSuccess={closeModal} cityCode={cityConfig.code} />
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
       {/* Модальное окно политики конфиденциальности */}
       <AnimatePresence>
         {isPrivacyModalOpen && (
@@ -979,124 +989,3 @@ export default function Home() {
     </div>
   );
 }
-
-// --- Карточка офиса ---
-interface OfficeCardProps {
-  city: string;
-  address: string;
-  phone: string;
-  color: string;
-  mapLink: string;
-  main?: boolean;
-}
-
-const OfficeCard = ({
-  city,
-  address,
-  phone,
-  color,
-  mapLink,
-}: OfficeCardProps) => {
-  const borderColor =
-    color === "brandYellow" ? "border-brandYellow" : "border-brandOrange";
-  return (
-    <div
-      className={`bg-gradient-to-br from-white to-gray-50 rounded-3xl p-8 shadow-xl shadow-[#f6dc49]/70 hover:shadow-2xl transition-all duration-500 w-80 h-64 group overflow-hidden border-l-4 border-[#da6d2a] relative`}
-    >
-      {/* Декоративный элемент */}
-      <div
-        className={`absolute top-0 right-0 w-20 h-20 rounded-full ${
-          color === "brandYellow" ? "bg-brandYellow/20" : "bg-brandOrange/20"
-        } -translate-y-10 translate-x-10 group-hover:scale-110 transition-transform duration-500`}
-      ></div>
-
-      <div className="relative z-10 h-full flex flex-col justify-between">
-        <div>
-          <div className="flex items-center gap-3 mb-3">
-            <div
-              className={`w-4 h-4 rounded-full ${
-                color === "brandYellow" ? "bg-brandYellow" : "bg-brandOrange"
-              } shadow-lg`}
-            ></div>
-            <h3 className="text-xl font-bold text-[#da6d2a]">{city}</h3>
-          </div>
-
-          <div className="flex items-start gap-3 mb-3">
-            <span className="text-brandOrange text-lg mt-1">📍</span>
-            <p className="text-gray-700 text-sm leading-relaxed flex-1">
-              {address}
-            </p>
-          </div>
-        </div>
-
-        <div>
-          <div className="mb-3">
-            <a
-              href={mapLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 text-brandOrange font-semibold hover:text-brandYellow transition-colors duration-200 text-sm"
-            >
-              <span className="text-lg">✅</span>
-              <span>Найти на карте</span>
-            </a>
-          </div>
-
-          <a
-            href={`tel:${phone}`}
-            className="inline-flex items-center gap-3 text-brandOrange font-semibold hover:text-brandYellow transition-colors duration-200 text-sm group/phone"
-          >
-            <span className="text-lg">📞</span>
-            <span className="group-hover/phone:translate-x-1 transition-transform duration-300">
-              {phone}
-            </span>
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// --- Карточка менеджера ---
-interface ManagerCardProps {
-  name: string;
-  position: string;
-  experience: string;
-  photo: string;
-}
-
-const ManagerCard = ({
-  name,
-  position,
-  experience,
-  photo,
-}: ManagerCardProps) => {
-  return (
-    <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 group overflow-hidden border-l-4 border-[#da6d2a] relative w-80 h-80">
-      {/* Декоративный элемент */}
-      <div className="absolute top-0 right-0 w-16 h-16 rounded-full bg-brandYellow/20 -translate-y-8 translate-x-8 group-hover:scale-110 transition-transform duration-500"></div>
-
-      <div className="relative z-10 text-center h-full flex flex-col justify-center">
-        <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-brandYellow to-brandOrange p-1 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
-          <Image
-            src={photo}
-            alt={name}
-            width={96}
-            height={96}
-            className="w-full h-full rounded-full object-cover"
-          />
-        </div>
-        <h3 className="text-xl font-bold text-[#da6d2a] mb-2 group-hover:scale-105 transition-transform duration-300">
-          {name}
-        </h3>
-        <p className="text-brandOrange font-semibold mb-3 text-sm">
-          {position}
-        </p>
-        <div className="flex items-center justify-center gap-2 text-gray-600 text-sm">
-          <span className="text-brandOrange">⏱️</span>
-          <span>{experience}</span>
-        </div>
-      </div>
-    </div>
-  );
-};
