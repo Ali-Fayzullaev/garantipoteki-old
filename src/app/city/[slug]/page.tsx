@@ -17,6 +17,11 @@ const CITY_CONFIG = {
     name: "Кокшетау",
     title: "GARANT IPOTEKI - Кокшетау",
   },
+  kostanay: {
+    code: "oawmSexI",
+    name: "Костанай",
+    title: "GARANT IPOTEKI - Костанай",
+  },
   // Добавьте другие города здесь
 };
 
@@ -339,6 +344,15 @@ export default function CityPage({
                 phone="+7 700 482 4545"
                 color="brandYellow"
                 mapLink="https://go.2gis.com/xH89z"
+              />
+            )}
+            {slug === "kostanay" && (
+              <OfficeCard
+                city="Костанай"
+                address="БЦ Атриум ​Проспект Аль-Фараби, 74​1, 8 офис; 1 этаж"
+                phone="+7 777 043 89 12"
+                color="brandYellow"
+                mapLink="https://go.2gis.com/oqJeX"
               />
             )}
           </div>
