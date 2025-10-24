@@ -293,16 +293,23 @@ export default function Home() {
             <OfficeCard
               city="Астана"
               address="Бауыржан Момышулы 2/5, БЦ «ОРДА», 2 блок, 2 этаж"
-              phone="+7 700 045 1202"
+              phone="+7707 575 9707"
               color="brandOrange"
               mapLink="https://go.2gis.com/pRU01"
             />
             <OfficeCard
               city="Астана"
               address="Улица Сыганак, 54а, 112 офис; 1 этаж - БЦ А-Бизнес"
-              phone="+7 700 045 1202"
+              phone="+7707 575 9707"
               color="brandYellow"
               mapLink="https://go.2gis.com/jfIyd"
+            />
+            <OfficeCard
+              city="Астана"
+              address="Бөгенбай Батыра 56а Бизнес центр «Фаворит» 7 этаж, 703 офис"
+              phone="+7 707 502 2320"
+              color="brandYellow"
+              mapLink="https://go.2gis.com/zUFAq"
             />
             <OfficeCard
               city="Костанай"
@@ -335,7 +342,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      
+
       {/* Блок 3 — Карусель с менеджерами */}
       <section className="py-12">
         <h2 className="text-3xl font-bold mb-8 text-gray-900 text-center">
