@@ -299,7 +299,7 @@ export default function Home() {
             />
             <OfficeCard
               city="Астана"
-              address="Улица Сыганак, 54а, 112 офис; 1 этаж - БЦ А-Бизнес"
+              address="Сыганак 54а БЦ «А» 107 офис"
               phone="+7707 575 9707"
               color="brandYellow"
               mapLink="https://go.2gis.com/jfIyd"
@@ -307,7 +307,7 @@ export default function Home() {
             <OfficeCard
               city="Астана"
               address="Бөгенбай Батыра 56а Бизнес центр «Фаворит» 7 этаж, 703 офис"
-              phone="+7 707 502 2320"
+              phone="+7707 575 9707"
               color="brandYellow"
               mapLink="https://go.2gis.com/zUFAq"
             />
