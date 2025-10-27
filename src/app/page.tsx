@@ -137,7 +137,7 @@ export default function Home() {
   const closeThankYouModal = () => setIsThankYouModalOpen(false);
 
   return (
-    <div className="font-sans min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 text-gray-900 relative overflow-hidden">
+    <div className="font-sans min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary-50/30 text-gray-900 relative overflow-hidden">
       {/* Современный анимированный фон с градиентами */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -146,7 +146,7 @@ export default function Home() {
         className="absolute inset-0 -z-10 pointer-events-none"
       >
         {/* Основной градиентный фон */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/40 via-white to-amber-50/60"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-50/40 via-white to-secondary-50/60"></div>
         
         {/* Плавающие геометрические элементы */}
         <motion.div
@@ -156,7 +156,7 @@ export default function Home() {
             rotate: [0, 180, 360],
           }}
           transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-          className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-xl"
+          className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-primary-400/20 to-secondary-400/20 rounded-full blur-xl"
         />
         <motion.div
           animate={{
@@ -165,7 +165,7 @@ export default function Home() {
             rotate: [360, 180, 0],
           }}
           transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
-          className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-amber-400/25 to-orange-400/25 rounded-lg blur-xl rotate-45"
+          className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-primary-400/25 to-secondary-400/25 rounded-lg blur-xl rotate-45"
         />
         <motion.div
           animate={{
@@ -210,7 +210,7 @@ export default function Home() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             onClick={openModal}
-            className="group bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl px-6 py-3 text-sm transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="btn-primary group font-semibold rounded-xl px-6 py-3 text-sm shadow-brand hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2"
           >
             <span className="flex items-center gap-2">
               <svg className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -233,8 +233,8 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="space-y-8"
             >
-              <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium">
-                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+              <div className="inline-flex items-center gap-2 bg-brand-light text-brand-dark px-4 py-2 rounded-full text-sm font-medium">
+                <div className="w-2 h-2 bg-brand-gradient rounded-full animate-pulse"></div>
                 Лидер рынка ипотечного кредитования
               </div>
               
@@ -244,7 +244,7 @@ export default function Home() {
                 transition={{ delay: 0.2, duration: 0.8 }}
                 className="text-5xl lg:text-7xl font-bold tracking-tight"
               >
-                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                <span className="text-brand-gradient">
                   GARANT
                 </span>
                 <br />
@@ -269,7 +269,8 @@ export default function Home() {
               >
                 <button
                   onClick={openModal}
-                  className="group bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-2xl shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105"
+                  className="btn-primary group px-8 py-4 rounded-2xl font-semibold text-lg shadow-2xl"
+                  style={{ boxShadow: '0 25px 50px -12px rgba(222, 106, 42, 0.25)' }}
                 >
                   <span className="flex items-center justify-center gap-3">
                     <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -282,8 +283,8 @@ export default function Home() {
                 <div className="flex items-center gap-3 text-gray-600">
                   <div className="flex -space-x-2">
                     <div className="w-10 h-10 bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full border-2 border-white"></div>
-                    <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full border-2 border-white"></div>
-                    <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full border-2 border-white"></div>
+                    <div className="w-10 h-10 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full border-2 border-white"></div>
+                    <div className="w-10 h-10 bg-brand-gradient rounded-full border-2 border-white"></div>
                   </div>
                   <div className="text-sm">
                     <div className="font-semibold text-gray-900">1000+ клиентов</div>
@@ -314,8 +315,8 @@ export default function Home() {
             >
               <div className="relative">
                 {/* Декоративный элемент */}
-                <div className="absolute -top-4 -left-4 w-72 h-72 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-3xl blur-3xl"></div>
-                <div className="absolute -bottom-4 -right-4 w-72 h-72 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-3xl blur-3xl"></div>
+                <div className="absolute -top-4 -left-4 w-72 h-72 bg-gradient-to-r from-primary-400/20 to-secondary-400/20 rounded-3xl blur-3xl"></div>
+                <div className="absolute -bottom-4 -right-4 w-72 h-72 opacity-20 rounded-3xl blur-3xl" style={{ background: 'linear-gradient(to right, #F6DB4A, #DE6A2A)' }}></div>
                 
                 {/* Видео контейнер */}
                 <div className="relative bg-white rounded-3xl p-2 shadow-2xl shadow-black/10">
@@ -331,7 +332,7 @@ export default function Home() {
                   {/* Плей кнопка (декоративная) */}
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
-                      <svg className="w-6 h-6 text-blue-600 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-6 h-6 text-secondary-600 ml-1" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M8 5v10l8-5-8-5z" />
                       </svg>
                     </div>
@@ -345,7 +346,7 @@ export default function Home() {
                   transition={{ delay: 1, duration: 0.5 }}
                   className="absolute -bottom-6 -left-6 bg-white rounded-2xl p-4 shadow-xl shadow-black/10"
                 >
-                  <div className="text-2xl font-bold text-blue-600">4.9⭐</div>
+                  <div className="text-2xl font-bold text-secondary-600">4.9⭐</div>
                   <div className="text-sm text-gray-600">Рейтинг в 2GIS</div>
                 </motion.div>
               </div>
@@ -357,7 +358,7 @@ export default function Home() {
       <OfficesCarousel />
 
       {/* Современная секция экспертов */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50/20">
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-primary-50/20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -365,7 +366,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
+            <div className="inline-flex items-center gap-2 bg-primary-50 text-secondary-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -435,12 +436,12 @@ export default function Home() {
             </Swiper>
 
             {/* Современные кнопки навигации */}
-            <button className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center text-gray-600 hover:text-blue-600 hover:scale-110 group">
+            <button className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center text-gray-600 hover:scale-110 group"  onMouseEnter={(e) => e.currentTarget.style.color = '#DE6A2A'} onMouseLeave={(e) => e.currentTarget.style.color = '#4b5563'}>
               <svg className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <button className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center text-gray-600 hover:text-blue-600 hover:scale-110 group">
+            <button className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center text-gray-600 hover:scale-110 group" onMouseEnter={(e) => e.currentTarget.style.color = '#DE6A2A'} onMouseLeave={(e) => e.currentTarget.style.color = '#4b5563'}>
               <svg className="w-5 h-5 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
@@ -480,7 +481,7 @@ export default function Home() {
                 height={300}
                 className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-blue-900/70 via-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300" style={{ background: 'linear-gradient(to top, rgba(222, 106, 42, 0.7), rgba(222, 106, 42, 0.2), transparent)' }}></div>
               <div className="absolute bottom-6 left-6 right-6 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
                 <h3 className="text-white font-bold text-lg mb-2">Счастливые клиенты</h3>
                 <p className="text-white/90 text-sm">Получили ключи от новой квартиры</p>
@@ -520,7 +521,7 @@ export default function Home() {
                 height={300}
                 className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-purple-900/70 via-purple-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300" style={{ background: 'linear-gradient(to top, rgba(246, 219, 74, 0.7), rgba(246, 219, 74, 0.2), transparent)' }}></div>
               <div className="absolute bottom-6 left-6 right-6 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
                 <h3 className="text-white font-bold text-lg mb-2">Комфортный офис</h3>
                 <p className="text-white/90 text-sm">Приятная атмосфера для консультаций</p>
@@ -533,19 +534,19 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
-            className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl p-8 lg:p-12 text-center text-white relative overflow-hidden"
+            className="rounded-3xl p-8 lg:p-12 text-center text-white relative overflow-hidden bg-brand-gradient"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/50 to-purple-600/50"></div>
+            <div className="absolute inset-0 opacity-50" style={{ background: 'linear-gradient(to right, #DE6A2A, #F6DB4A)' }}></div>
             <div className="relative">
               <h3 className="text-3xl lg:text-4xl font-bold mb-4">
                 Готовы стать нашим следующим успешным клиентом?
               </h3>
-              <p className="text-xl mb-8 text-blue-100">
+              <p className="text-xl mb-8 text-orange-100">
                 Получите бесплатную консультацию и узнайте свои возможности уже сегодня
               </p>
               <button
                 onClick={openModal}
-                className="bg-white text-blue-600 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                className="bg-white text-black/80 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-primary-50 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
               >
                 Получить консультацию
               </button>
@@ -562,7 +563,7 @@ export default function Home() {
         <LeadForm onSuccess={openThankYouModal} />
       </section>
       {/* Секция преимуществ с современным дизайном */}
-      <section className="py-20 bg-gradient-to-br from-slate-50 to-blue-50/30">
+      <section className="py-20 bg-gradient-to-br from-slate-50 to-primary-50/30">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -570,7 +571,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
+            <div className="inline-flex items-center gap-2 bg-primary-50 text-secondary-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
               </svg>
@@ -591,8 +592,8 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="group relative"
             >
-              <div className="h-full bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border-b-4 border-blue-500 group-hover:-translate-y-2">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
+              <div className="h-full bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border-b-4 border-secondary-500 group-hover:-translate-y-2">
+                <div className="w-16 h-16 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-2xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
                   💰
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
@@ -648,8 +649,8 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="group relative"
             >
-              <div className="h-full bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border-b-4 border-purple-500 group-hover:-translate-y-2">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
+              <div className="h-full bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border-b-4 border-brand group-hover:-translate-y-2" style={{ borderBottomColor: '#F6DB4A' }}>
+                <div className="w-16 h-16 bg-brand-gradient rounded-2xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
                   🔄
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
@@ -750,7 +751,7 @@ export default function Home() {
             {/* Компания */}
             <div className="lg:col-span-2 space-y-6">
               <div className="space-y-4">
-                <h3 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+                <h3 className="text-3xl font-bold text-brand-gradient">
                   GARANT IPOTEKI
                 </h3>
                 <p className="text-gray-300 text-lg leading-relaxed max-w-md">
@@ -759,7 +760,7 @@ export default function Home() {
               </div>
               
               <div className="bg-gray-800/50 rounded-2xl p-6 space-y-3">
-                <h4 className="font-semibold text-blue-400 mb-3">Реквизиты компании</h4>
+                <h4 className="font-semibold mb-3" style={{ color: '#F6DB4A' }}>Реквизиты компании</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-300">
                   <div>БИН: 240840010906</div>
                   <div>г. Астана, 2025</div>
@@ -773,13 +774,13 @@ export default function Home() {
 
             {/* Контакты */}
             <div className="space-y-6">
-              <h3 className="text-xl font-bold text-blue-400">Контакты</h3>
+              <h3 className="text-xl font-bold" style={{ color: '#F6DB4A' }}>Контакты</h3>
               <div className="space-y-4">
                 <a 
                   href="tel:+77075759707"
                   className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors duration-300 group"
                 >
-                  <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-700 transition-colors duration-300">
+                  <div className="w-12 h-12 bg-secondary-600 rounded-xl flex items-center justify-center group-hover:bg-secondary-700 transition-colors duration-300">
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                     </svg>
@@ -810,7 +811,7 @@ export default function Home() {
 
             {/* Социальные сети */}
             <div className="space-y-6">
-              <h3 className="text-xl font-bold text-blue-400">Мы в соцсетях</h3>
+              <h3 className="text-xl font-bold" style={{ color: '#F6DB4A' }}>Мы в соцсетях</h3>
               <div className="space-y-4">
                 <a
                   href="https://wa.me/77075759707"
@@ -996,7 +997,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mt-6">
+                <div className="bg-primary-50 border-l-4 border-secondary-500 p-4 rounded-r-lg mt-6">
                   <p className="text-sm text-gray-600">
                     <strong>Дата последнего обновления:</strong> 2025 год
                   </p>

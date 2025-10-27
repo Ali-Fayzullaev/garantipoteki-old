@@ -26,9 +26,9 @@ const OfficeCardCarousel: React.FC<OfficeCardCarouselProps> = ({
     'from-secondary-500/10 to-accent-500/10 border-secondary-500/20',
     'from-accent-500/10 to-primary-500/10 border-accent-500/20',
     'from-emerald-500/10 to-cyan-500/10 border-emerald-500/20',
-    'from-purple-500/10 to-pink-500/10 border-purple-500/20',
+    'from-primary-500/10 to-secondary-500/10 border-primary-500/20',
     'from-orange-500/10 to-red-500/10 border-orange-500/20',
-    'from-blue-500/10 to-indigo-500/10 border-blue-500/20',
+    'from-primary-500/10 to-secondary-500/10 border-primary-500/20',
   ];
 
   const iconColors = [
@@ -36,9 +36,9 @@ const OfficeCardCarousel: React.FC<OfficeCardCarouselProps> = ({
     'text-secondary-600 bg-secondary-100',
     'text-accent-600 bg-accent-100',
     'text-emerald-600 bg-emerald-100',
-    'text-purple-600 bg-purple-100',
+    'text-secondary-600 bg-secondary-100',
     'text-orange-600 bg-orange-100',
-    'text-blue-600 bg-blue-100',
+    'text-secondary-600 bg-secondary-100',
   ];
 
   const gradientClass = gradientClasses[index % gradientClasses.length];

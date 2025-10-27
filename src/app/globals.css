@@ -2,22 +2,33 @@
 @import "tailwindcss";
 
 :root {
-  /* Современная цветовая палитра */
+  /* Корпоративная цветовая палитра */
   --background: #ffffff;
-  --foreground: #0f172a;
+  --foreground: #212121;
 
-  /* Blue palette */
-  --blue-50: #eff6ff;
-  --blue-100: #dbeafe;
-  --blue-500: #3b82f6;
-  --blue-600: #2563eb;
-  --blue-700: #1d4ed8;
-  --blue-900: #1e3a8a;
+  /* Primary Yellow palette (Logo color #F6DB4A) */
+  --primary-50: #fefdf7;
+  --primary-100: #fefaec;
+  --primary-200: #fdf2d0;
+  --primary-300: #fce7a9;
+  --primary-400: #fad777;
+  --primary-500: #f6db4a;
+  --primary-600: #e8c43d;
+  --primary-700: #d4a933;
+  --primary-800: #ad872e;
+  --primary-900: #8b6f2a;
 
-  /* Indigo palette */
-  --indigo-500: #6366f1;
-  --indigo-600: #4f46e5;
-  --indigo-700: #4338ca;
+  /* Secondary Orange palette (Logo color #DE6A2A) */
+  --secondary-50: #fef6f2;
+  --secondary-100: #feeae1;
+  --secondary-200: #fed2c2;
+  --secondary-300: #fcb297;
+  --secondary-400: #f8855f;
+  --secondary-500: #de6a2a;
+  --secondary-600: #d25d24;
+  --secondary-700: #af4b1f;
+  --secondary-800: #8c3f1e;
+  --secondary-900: #72361e;
 
   /* Gray palette */
   --gray-50: #f8fafc;
@@ -448,7 +459,41 @@ body {
   box-shadow: 0 0 0 2px rgba(243, 119, 11, 0.3);
 }
 
+/* Корпоративные стили */
+.btn-primary {
+  background: linear-gradient(to right, #de6a2a, #f6db4a) !important;
+  color: white !important;
+  transition: all 0.3s ease !important;
+}
 
-.bb {
-  border: 2px solid blue;
+.btn-primary:hover {
+  background: linear-gradient(to right, #af4b1f, #e8c43d) !important;
+  transform: scale(1.05) !important;
+}
+
+.bg-brand-gradient {
+  background: linear-gradient(to right, #de6a2a, #f6db4a) !important;
+}
+
+.text-brand-gradient {
+  background: linear-gradient(to right, #de6a2a, #f6db4a, #af4b1f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.bg-brand-light {
+  background-color: #fefdf7 !important;
+}
+
+.text-brand-dark {
+  color: #af4b1f !important;
+}
+
+.border-brand {
+  border-color: #de6a2a !important;
+}
+
+.shadow-brand {
+  box-shadow: 0 10px 15px -3px rgba(222, 106, 42, 0.25) !important;
 }

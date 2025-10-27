@@ -163,7 +163,7 @@ function LeadForm({ onSuccess, cityCode }: LeadFormProps) {
         className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md relative overflow-hidden"
       >
         {/* Декоративный градиент */}
-        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+        <div className="absolute top-0 left-0 w-full h-2 bg-brand-gradient"></div>
         
         {/* Заголовок */}
         <div className="text-center mb-8">
@@ -171,7 +171,7 @@ function LeadForm({ onSuccess, cityCode }: LeadFormProps) {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4"
+            className="w-16 h-16 bg-brand-gradient rounded-full flex items-center justify-center mx-auto mb-4"
           >
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
@@ -193,7 +193,9 @@ function LeadForm({ onSuccess, cityCode }: LeadFormProps) {
             <div className="relative">
               <input
                 type="text"
-                className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-0 transition-all duration-300 placeholder-gray-400 bg-gray-50 focus:bg-white"
+                className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-0 transition-all duration-300 placeholder-gray-400 bg-gray-50 focus:bg-white"
+                onFocus={(e) => e.target.style.borderColor = '#DE6A2A'}
+                onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 placeholder="Введите ваше имя"
                 value={formData.name}
                 onChange={(e) => {
@@ -216,7 +218,9 @@ function LeadForm({ onSuccess, cityCode }: LeadFormProps) {
             <div className="relative">
               <input
                 type="tel"
-                className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-0 transition-all duration-300 placeholder-gray-400 bg-gray-50 focus:bg-white"
+                className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-0 transition-all duration-300 placeholder-gray-400 bg-gray-50 focus:bg-white"
+                onFocus={(e) => e.target.style.borderColor = '#DE6A2A'}
+                onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
                 placeholder="+7 777 123-45-67"
                 value={formData.phone}
                 onChange={(e) => {
@@ -259,7 +263,7 @@ function LeadForm({ onSuccess, cityCode }: LeadFormProps) {
             disabled={isLoading}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 rounded-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+            className="btn-primary w-full font-semibold py-4 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
           >
             {isLoading ? (
               <div className="flex items-center justify-center gap-3">
@@ -278,7 +282,7 @@ function LeadForm({ onSuccess, cityCode }: LeadFormProps) {
 
           <p className="text-xs text-gray-500 text-center">
             Нажимая кнопку, вы соглашаетесь с 
-            <span className="text-blue-600 underline cursor-pointer"> политикой конфиденциальности</span>
+            <span className="text-secondary-600 underline cursor-pointer"> политикой конфиденциальности</span>
           </p>
         </form>
       </motion.div>
@@ -292,7 +296,7 @@ function LeadForm({ onSuccess, cityCode }: LeadFormProps) {
         className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md relative overflow-hidden"
       >
         {/* Декоративный градиент */}
-        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-500"></div>
+        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary-500 via-secondary-500 to-primary-600"></div>
         
         {/* Заголовок */}
         <div className="text-center mb-8">
@@ -300,7 +304,7 @@ function LeadForm({ onSuccess, cityCode }: LeadFormProps) {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="w-16 h-16 bg-gradient-to-r from-emerald-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4"
+            className="w-16 h-16 bg-gradient-to-r from-primary-500 to-secondary-600 rounded-full flex items-center justify-center mx-auto mb-4"
           >
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -323,13 +327,13 @@ function LeadForm({ onSuccess, cityCode }: LeadFormProps) {
               transition={{ delay: index * 0.1 }}
               whileHover={{ scale: 1.02, x: 4 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 text-gray-900 font-semibold py-4 px-6 rounded-2xl transition-all duration-300 border-2 border-blue-200 hover:border-blue-400 hover:shadow-lg group"
+              className="w-full bg-gradient-to-r from-primary-50 to-secondary-50 hover:from-primary-100 hover:to-secondary-100 text-gray-900 font-semibold py-4 px-6 rounded-2xl transition-all duration-300 border-2 border-secondary-200 hover:border-secondary-400 hover:shadow-lg group"
               onClick={() => handleServiceSelect(s.id, s.name)}
               disabled={isLoading}
             >
               <div className="flex items-center justify-between">
                 <span>{s.name}</span>
-                <svg className="w-5 h-5 text-blue-500 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: '#DE6A2A' }}>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
@@ -343,11 +347,11 @@ function LeadForm({ onSuccess, cityCode }: LeadFormProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="mt-6 bg-blue-50 rounded-2xl p-4"
+              className="mt-6 bg-primary-50 rounded-2xl p-4"
             >
               <div className="flex items-center justify-center gap-3">
-                <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                <span className="text-blue-700 font-medium">Обработка вашей заявки...</span>
+                <div className="w-6 h-6 border-2 border-secondary-500 border-t-transparent rounded-full animate-spin"></div>
+                <span className="text-secondary-700 font-medium">Обработка вашей заявки...</span>
               </div>
             </motion.div>
           )}
@@ -388,8 +392,8 @@ function LeadForm({ onSuccess, cityCode }: LeadFormProps) {
                 Мы подбираем для вас нашего лучшего специалиста по ипотеке
               </p>
             </div>
-            <div className="bg-blue-50 rounded-2xl p-4 border-l-4 border-blue-500">
-              <p className="text-blue-800 font-medium">
+            <div className="bg-primary-50 rounded-2xl p-4 border-l-4 border-secondary-500">
+              <p className="text-secondary-800 font-medium">
                 Ожидайте звонка в течение 5 минут!
               </p>
             </div>
