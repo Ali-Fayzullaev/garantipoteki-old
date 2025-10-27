@@ -41,9 +41,10 @@ function validateName(name: string) {
 interface LeadFormProps {
   onSuccess?: () => void;
   cityCode?: string;
+  useWhatsApp?: boolean; // Новый проп для определения использования WhatsApp логики
 }
 
-function LeadForm({ onSuccess, cityCode }: LeadFormProps) {
+function LeadForm({ onSuccess, cityCode, useWhatsApp = false }: LeadFormProps) {
   const [step, setStep] = useState(1);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -55,6 +56,8 @@ function LeadForm({ onSuccess, cityCode }: LeadFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
+
     if (!validateName(formData.name)) {
       setError("Введите корректное имя (минимум 2 символа)");
       setIsLoading(false);
@@ -65,22 +68,67 @@ function LeadForm({ onSuccess, cityCode }: LeadFormProps) {
       setIsLoading(false);
       return;
     }
-    try {
-      // Передаем cityCode в API функции
-      const deal = await createDeal({
-        name: formData.name,
-        phone_number: formatPhoneNumber(formData.phone),
-      }, cityCode);
-      
-      setDealId(deal.id);
-      const services = await getServices(cityCode);
-      setServices(services);
 
-      setIsLoading(false);
-      setStep(2);
+    try {
+      if (useWhatsApp) {
+        // Новая логика с отправкой в WhatsApp
+        const response = await fetch('/api/submit-form', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            type: 'form',
+            name: formData.name,
+            phone: formData.phone,
+          }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || 'Ошибка отправки заявки');
+        }
+
+        setIsLoading(false);
+        setSuccess(true);
+        setStep(3);
+        
+        setTimeout(() => {
+          setStep(4);
+          setTimeout(() => {
+            setStep(1);
+            setFormData({ name: "", phone: "" });
+            setServices([]);
+            setTimeout(() => {
+              if (onSuccess) {
+                onSuccess();
+              }
+            }, 1500);
+          }, 2000);
+        }, 2000);
+      } else {
+        // Старая логика для городских страниц
+        const deal = await createDeal({
+          name: formData.name,
+          phone_number: formatPhoneNumber(formData.phone),
+        }, cityCode);
+        
+        setDealId(deal.id);
+        const services = await getServices(cityCode);
+        setServices(services);
+
+        setIsLoading(false);
+        setStep(2);
+      }
     } catch (e) {
       setIsLoading(false);
-      setStep(2);
+      if (useWhatsApp) {
+        setError(e instanceof Error ? e.message : "Произошла ошибка при отправке заявки");
+      } else {
+        // Для старой логики продолжаем к выбору услуг даже при ошибке
+        setStep(2);
+      }
     }
   };
 
@@ -287,7 +335,7 @@ function LeadForm({ onSuccess, cityCode }: LeadFormProps) {
         </form>
       </motion.div>
     );
-  if (step === 2)
+  if (step === 2 && !useWhatsApp)
     return (
       <motion.div
         initial={{ opacity: 0, x: 30 }}

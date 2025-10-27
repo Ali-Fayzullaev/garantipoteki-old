@@ -7,127 +7,17 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { createDeal, getServices, updateDeal, updateTxt } from "@/api/api";
 import LeadForm from "@/components/LeadForm";
 import OfficesCarousel from "@/components/OfficesCarousel";
-
-type ServiceType = {
-  id: number;
-  company_id: number;
-  name: string;
-  order_number: number;
-};
-
-function formatPhone(value: string) {
-  let digits = value.replace(/\D/g, "");
-  if (!digits.startsWith("7")) digits = "7" + digits;
-  let formatted = "+7 ";
-  if (digits.length > 1) formatted += digits.slice(1, 4);
-  if (digits.length > 4) formatted += " " + digits.slice(4, 7);
-  if (digits.length > 7) formatted += "-" + digits.slice(7, 9);
-  if (digits.length > 9) formatted += "-" + digits.slice(9, 11);
-  return formatted;
-}
-
-function formatPhoneNumber(phone: string): string {
-  return phone.replace(/\D/g, "");
-}
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
   const [isThankYouModalOpen, setIsThankYouModalOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: "", phone: "" });
-  const [isLoading, setIsLoading] = useState(false);
-  const [step, setStep] = useState(1); // 1: форма, 2: выбор услуги, 3: успех
-  const [dealId, setDealId] = useState<string | null>(null);
-  const [services, setServices] = useState<ServiceType[]>([]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    try {
-      const deal = await createDeal({
-        name: formData.name,
-        phone_number: formatPhoneNumber(formData.phone),
-      });
-      setDealId(deal.id);
-      const services = await getServices();
-      setServices(services);
-
-      setIsLoading(false);
-      setStep(2);
-    } catch (e) {
-      setIsLoading(false);
-      // Показываем ошибку или продолжаем
-      setStep(2);
-    }
-  };
-
-  const handleServiceSelect = async (service_id: number, service: string) => {
-    if (!dealId) {
-      setStep(1);
-      return;
-    }
-    setIsLoading(true);
-    try {
-      await updateDeal(
-        {
-          service_id: service_id,
-          phone_number: formatPhoneNumber(formData.phone),
-        },
-        dealId
-      );
-
-      try {
-        await updateTxt({
-          name: formData.name,
-          phone: formData.phone,
-          service: service,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-
-      // Отслеживание события Facebook Pixel
-      if (typeof window !== "undefined" && (window as any).fbq) {
-        (window as any).fbq("track", "Lead", {
-          content_name: service,
-          content_category: "form_submission",
-        });
-      }
-
-      setIsLoading(false);
-      setStep(3);
-      setTimeout(() => {
-        setIsModalOpen(false);
-        setStep(1);
-        setFormData({ name: "", phone: "" });
-        // Показываем модальное окно с благодарностью через 1.5 секунды
-        setTimeout(() => {
-          setIsThankYouModalOpen(true);
-        }, 1500);
-      }, 2000);
-    } catch (e) {
-      setIsLoading(false);
-      // Показываем ошибку или продолжаем
-      setStep(3);
-      setTimeout(() => {
-        setIsModalOpen(false);
-        setStep(1);
-        setFormData({ name: "", phone: "" });
-        setTimeout(() => {
-          setIsThankYouModalOpen(true);
-        }, 1500);
-      }, 2000);
-    }
-  };
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
     setIsModalOpen(false);
-    setStep(1);
-    setFormData({ name: "", phone: "" });
   };
 
   const openPrivacyModal = () => setIsPrivacyModalOpen(true);
@@ -678,7 +568,7 @@ export default function Home() {
         <h2 className="text-3xl font-bold mb-8 text-gray-900 text-center">
           Бесплатная консультация
         </h2>
-        <LeadForm onSuccess={openThankYouModal} />
+        <LeadForm onSuccess={openThankYouModal} useWhatsApp={true} />
       </section>
       {/* Секция преимуществ с современным дизайном */}
       <section className="py-20 bg-gradient-to-br from-slate-50 to-primary-50/30">
@@ -1027,7 +917,7 @@ export default function Home() {
               className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <LeadForm onSuccess={closeModal} />
+              <LeadForm onSuccess={closeModal} useWhatsApp={true} />
             </motion.div>
           </motion.div>
         )}
