@@ -1,4 +1,4 @@
-//src/app/page.tsx
+﻿//src/app/page.tsx
 "use client";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -9,6 +9,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createDeal, getServices, updateDeal, updateTxt } from "@/api/api";
 import LeadForm from "@/components/LeadForm";
+import OfficesCarousel from "@/components/OfficesCarousel";
 
 type ServiceType = {
   id: number;
@@ -136,230 +137,259 @@ export default function Home() {
   const closeThankYouModal = () => setIsThankYouModalOpen(false);
 
   return (
-    <div className="font-sans min-h-screen bg-brandWhite text-gray-900 relative overflow-hidden">
-      {/* WOW-анимированный мягкий фон с кругами */}
+    <div className="font-sans min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 text-gray-900 relative overflow-hidden">
+      {/* Современный анимированный фон с градиентами */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 1.2 }}
         className="absolute inset-0 -z-10 pointer-events-none"
       >
+        {/* Основной градиентный фон */}
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/40 via-white to-amber-50/60"></div>
+        
+        {/* Плавающие геометрические элементы */}
         <motion.div
           animate={{
-            background: [
-              "radial-gradient(circle at 70% 20%, #f6dc49 0%, transparent 60%)",
-              "radial-gradient(circle at 30% 80%, #dc6d28 0%, transparent 60%)",
-              "radial-gradient(circle at 70% 20%, #f6dc49 0%, transparent 60%)",
-            ],
+            x: [0, 100, 0],
+            y: [0, -50, 0],
+            rotate: [0, 180, 360],
           }}
-          transition={{ repeat: Infinity, duration: 12, ease: "linear" }}
-          className="absolute inset-0 w-full h-full"
+          transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+          className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-xl"
+        />
+        <motion.div
+          animate={{
+            x: [0, -80, 0],
+            y: [0, 60, 0],
+            rotate: [360, 180, 0],
+          }}
+          transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+          className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-amber-400/25 to-orange-400/25 rounded-lg blur-xl rotate-45"
+        />
+        <motion.div
+          animate={{
+            x: [0, 60, 0],
+            y: [0, -30, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{ repeat: Infinity, duration: 15, ease: "easeInOut" }}
+          className="absolute bottom-32 left-1/3 w-40 h-40 bg-gradient-to-r from-emerald-400/20 to-teal-400/20 rounded-full blur-2xl"
+        />
+        
+        {/* Сетка точек для современного вида */}
+        <div 
+          className="absolute inset-0 opacity-[0.15]"
           style={{
-            backgroundSize: "200% 200%",
-            filter: "blur(32px)",
-            opacity: 0.18,
+            backgroundImage: `radial-gradient(circle at 1px 1px, #6366f1 1px, transparent 0)`,
+            backgroundSize: '40px 40px'
           }}
-        />
-        {/* Декоративные круги */}
-        <motion.div
-          animate={{
-            x: [0, 30, 0],
-            y: [0, -20, 0],
-          }}
-          transition={{ repeat: Infinity, duration: 10, ease: "easeInOut" }}
-          className="absolute left-1/4 top-1/3 w-96 h-96 bg-brandYellow/30 rounded-full blur-3xl opacity-60"
-        />
-        <motion.div
-          animate={{
-            x: [0, -40, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{ repeat: Infinity, duration: 14, ease: "easeInOut" }}
-          className="absolute right-1/4 bottom-0 w-[420px] h-[420px] bg-brandOrange/20 rounded-full blur-3xl opacity-50"
-        />
+        ></div>
       </motion.div>
-      {/* --- Фиксированная полупрозрачная шапка с логотипом --- */}
-      <header
-        className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur border-b border-gray-100 flex items-center justify-between px-8"
-        style={{ height: "56px" }}
-      >
-        <div className="flex items-center h-14">
-          <Image
-            src="/logo.png"
-            alt="GARANT IPOTEKI логотип"
-            width={142}
-            height={40}
-            className="h-10 w-auto object-contain"
-            priority
-          />
-        </div>
-        <button
-          onClick={openModal}
-          className="bg-[#f6dc49] text-gray-900 font-semibold rounded-full px-4 md:px-7 py-2 text-sm md:text-base shadow focus:outline-none focus:ring-2 focus:ring-brandOrange focus:ring-offset-2 whitespace-nowrap"
-        >
-          Оставить заявку
-        </button>
-      </header>
-      {/* Hero-блок: видео слева (десктоп), текст справа и по центру, на мобилке видео после текста */}
-      <section className="flex flex-col md:flex-row items-start justify-start min-h-[70vh] py-20 text-center relative gap-10 md:gap-0">
-        {/* Фоновые изображения клиентов */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/3.jpg"
-            alt="Клиент 3"
-            fill
-            className="object-cover object-top opacity-15"
-            priority
-          />
-        </div>
-
-        <div className="flex-1 flex flex-col items-center justify-start z-10 w-full -mt-24">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="mt-0 w-full"
+      {/* --- Современная фиксированная шапка --- */}
+      <header className="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-lg border-b border-gray-200/50 shadow-lg shadow-black/[0.03]">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-16">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex items-center"
           >
-            <h1
-              className="text-5xl md:text-7xl font-extrabold mb-4 bg-gradient-to-r from-brandYellow via-brandOrange to-brandYellow bg-clip-text text-transparent tracking-tight text-center"
-              style={{ fontFamily: "Montserrat, Arial, sans-serif" }}
-            >
-              GARANT IPOTEKI
-            </h1>
+            <Image
+              src="/logo.png"
+              alt="GARANT IPOTEKI логотип"
+              width={160}
+              height={44}
+              className="h-11 w-auto object-contain"
+              priority
+            />
           </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.7 }}
-            className="text-2xl md:text-4xl font-semibold mb-4 text-gray-900 text-center w-full"
-            style={{ fontFamily: "Montserrat, Arial, sans-serif" }}
-          >
-            Кредиты и ипотека под ключ
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.7 }}
-            className="text-lg md:text-2xl mb-10 text-gray-700 max-w-2xl mx-auto text-center"
-          >
-            Без первоначального взноса.
-            <br />
-            Даже с действующими кредитами.
-          </motion.p>
+          
           <motion.button
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
             onClick={openModal}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.7, duration: 0.5 }}
-            className="bg-[#f6dc49] text-gray-900 font-bold rounded-full px-14 py-5 text-xl shadow-lg shadow-[#dd6c2b]/70 focus:outline-none focus:ring-2 focus:ring-brandOrange focus:ring-offset-2 inline-block mx-auto hover:scale-105 transition-transform duration-300"
+            className="group bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl px-6 py-3 text-sm transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
-            Оставить заявку
+            <span className="flex items-center gap-2">
+              <svg className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Оставить заявку
+            </span>
           </motion.button>
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.5 }}
-            className="text-sm italic text-gray-600 mt-3 text-center"
-          >
-            Консультация Бесплатно!
-          </motion.p>
         </div>
-        <div className="flex-1 flex justify-center items-start w-full">
-          <div className="flex flex-col items-center">
-            <div className="bg-white rounded-3xl shadow-2xl shadow-[#dd6c2b]/70 relative z-20">
-              <video
-                src="/video.mp4"
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="rounded-2xl w-full max-w-xs sm:max-w-md md:w-[420px] md:h-[320px] object-cover bg-white"
-                style={{ backgroundColor: "white", opacity: 1, zIndex: 30 }}
-              />
-            </div>
-            <p className="text-lg italic text-gray-700 mt-4 text-center">
-              Более 1000+ довольных клиентов!
-            </p>
+      </header>
+      {/* Hero-секция с современным дизайном */}
+      <section className="relative min-h-screen flex items-center">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20 lg:py-32">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            
+            {/* Левая колонка - контент */}
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-8"
+            >
+              <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium">
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                Лидер рынка ипотечного кредитования
+              </div>
+              
+              <motion.h1 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.8 }}
+                className="text-5xl lg:text-7xl font-bold tracking-tight"
+              >
+                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                  GARANT
+                </span>
+                <br />
+                <span className="text-gray-900">IPOTEKI</span>
+              </motion.h1>
+              
+              <motion.p 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.8 }}
+                className="text-xl lg:text-2xl text-gray-600 leading-relaxed max-w-lg"
+              >
+                Кредиты и ипотека под ключ. 
+                <span className="font-semibold text-gray-900">Без первоначального взноса</span> и даже с действующими кредитами.
+              </motion.p>
+              
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.8 }}
+                className="flex flex-col sm:flex-row gap-4"
+              >
+                <button
+                  onClick={openModal}
+                  className="group bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-2xl shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105"
+                >
+                  <span className="flex items-center justify-center gap-3">
+                    <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Получить консультацию
+                  </span>
+                </button>
+                
+                <div className="flex items-center gap-3 text-gray-600">
+                  <div className="flex -space-x-2">
+                    <div className="w-10 h-10 bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full border-2 border-white"></div>
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full border-2 border-white"></div>
+                    <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full border-2 border-white"></div>
+                  </div>
+                  <div className="text-sm">
+                    <div className="font-semibold text-gray-900">1000+ клиентов</div>
+                    <div className="text-gray-500">доверяют нам</div>
+                  </div>
+                </div>
+              </motion.div>
+              
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8, duration: 0.8 }}
+                className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
+                </svg>
+                Консультация бесплатно
+              </motion.div>
+            </motion.div>
+            
+            {/* Правая колонка - видео */}
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="relative"
+            >
+              <div className="relative">
+                {/* Декоративный элемент */}
+                <div className="absolute -top-4 -left-4 w-72 h-72 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-3xl blur-3xl"></div>
+                <div className="absolute -bottom-4 -right-4 w-72 h-72 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-3xl blur-3xl"></div>
+                
+                {/* Видео контейнер */}
+                <div className="relative bg-white rounded-3xl p-2 shadow-2xl shadow-black/10">
+                  <video
+                    src="/video.mp4"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-80 lg:h-96 object-cover rounded-2xl"
+                  />
+                  
+                  {/* Плей кнопка (декоративная) */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
+                      <svg className="w-6 h-6 text-blue-600 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8 5v10l8-5-8-5z" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Статистика карточки */}
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 1, duration: 0.5 }}
+                  className="absolute -bottom-6 -left-6 bg-white rounded-2xl p-4 shadow-xl shadow-black/10"
+                >
+                  <div className="text-2xl font-bold text-blue-600">4.9⭐</div>
+                  <div className="text-sm text-gray-600">Рейтинг в 2GIS</div>
+                </motion.div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
       {/* Блок с адресами офисов */}
-      <section className="py-20 bg-gradient-to-br from-brandYellow/20 via-brandOrange/20 to-brandYellow/30 relative">
-        <div className="container mx-auto px-4 relative z-10">
-          <h2 className="text-3xl font-bold mb-10 text-gray-900 text-center">
-            Наши офисы
-          </h2>
-          <div className="flex flex-wrap justify-center gap-10">
-            <OfficeCard
-              city="Астана"
-              address="Бауыржан Момышулы 2/5, БЦ «ОРДА», 2 блок, 2 этаж"
-              phone="+7707 575 9707"
-              color="brandOrange"
-              mapLink="https://go.2gis.com/pRU01"
-            />
-            <OfficeCard
-              city="Астана"
-              address="Сыганак 54а БЦ «А» 107 офис"
-              phone="+7707 575 9707"
-              color="brandYellow"
-              mapLink="https://go.2gis.com/jfIyd"
-            />
-            <OfficeCard
-              city="Астана"
-              address="Бөгенбай Батыра 56а Бизнес центр «Фаворит» 7 этаж, 703 офис"
-              phone="+7707 575 9707"
-              color="brandYellow"
-              mapLink="https://go.2gis.com/zUFAq"
-            />
-            <OfficeCard
-              city="Костанай"
-              address="БЦ Атриум ​Проспект Аль-Фараби, 74​1, 8 офис; 1 этаж"
-              phone="+7 777 043 89 12"
-              color="brandYellow"
-              mapLink="https://go.2gis.com/oqJeX"
-            />
-            <OfficeCard
-              city="Рудный"
-              address="Космонавтов 8, вход со стороны ЦОНа"
-              phone="+7 777 043 89 12"
-              color="brandOrange"
-              mapLink="https://go.2gis.com/moFj0"
-            />
-            <OfficeCard
-              city="Петропавловск"
-              address="Сутюшева 60, БЦ «Квартал», 3 этаж, кабинет 3.14"
-              phone="+7 708 153 7750"
-              color="brandYellow"
-              mapLink="https://go.2gis.com/xSuoa"
-            />
-            <OfficeCard
-              city="Кокшетау"
-              address="Н.Назарбаева 29Б, 4 этаж, кабинет 406"
-              phone="+7 700 482 4545"
-              color="brandOrange"
-              mapLink="https://go.2gis.com/xH89z"
-            />
-          </div>
-        </div>
-      </section>
+      <OfficesCarousel />
 
-      {/* Блок 3 — Карусель с менеджерами */}
-      <section className="py-12">
-        <h2 className="text-3xl font-bold mb-8 text-gray-900 text-center">
-          Наши лучшие эксперты
-        </h2>
-        <div className="max-w-4xl mx-auto px-4">
+      {/* Современная секция экспертов */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50/20">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Наша команда
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+              Лучшие эксперты по кредитованию
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Профессионалы с многолетним опытом помогут вам получить кредит на лучших условиях
+            </p>
+          </motion.div>
+
           <div className="relative">
             <Swiper
               modules={[Navigation, Autoplay]}
               spaceBetween={30}
               slidesPerView={1}
               navigation={{
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
+                nextEl: ".swiper-button-next-custom",
+                prevEl: ".swiper-button-prev-custom",
               }}
               autoplay={{
-                delay: 4000,
+                delay: 5000,
                 disableOnInteraction: false,
               }}
               loop={true}
@@ -369,12 +399,6 @@ export default function Home() {
                 1024: { slidesPerView: 3 },
               }}
               className="w-full"
-              style={
-                {
-                  "--swiper-navigation-size": "48px",
-                  "--swiper-navigation-color": "#f6dc49",
-                } as React.CSSProperties
-              }
             >
               <SwiperSlide className="flex justify-center">
                 <ManagerCard
@@ -410,17 +434,39 @@ export default function Home() {
               </SwiperSlide>
             </Swiper>
 
-            {/* Кастомные стрелки */}
-            <div className="swiper-button-prev !absolute !w-12 !h-12 !bg-[#f6dc49] !rounded-full !text-gray-900 !shadow-lg hover:!scale-110 transition-transform duration-300 !left-4 !top-1/2 !-translate-y-1/2 !z-10"></div>
-            <div className="swiper-button-next !absolute !w-12 !h-12 !bg-[#f6dc49] !rounded-full !text-gray-900 !shadow-lg hover:!scale-110 transition-transform duration-300 !right-4 !top-1/2 !-translate-y-1/2 !z-10"></div>
+            {/* Современные кнопки навигации */}
+            <button className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center text-gray-600 hover:text-blue-600 hover:scale-110 group">
+              <svg className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center text-gray-600 hover:text-blue-600 hover:scale-110 group">
+              <svg className="w-5 h-5 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Блок 4 — Галерея */}
-      <section className="py-16">
-        <div className="max-w-6xl mx-auto px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Современная галерея с CTA */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+              Наша работа в фотографиях
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Посмотрите, как мы помогаем клиентам осуществить мечту о собственном жилье
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -429,12 +475,16 @@ export default function Home() {
             >
               <Image
                 src="/ph1.jpg"
-                alt="Фото 1"
+                alt="Успешные клиенты с ключами от нового дома"
                 width={400}
                 height={300}
-                className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-500"
+                className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-blue-900/70 via-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+              <div className="absolute bottom-6 left-6 right-6 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
+                <h3 className="text-white font-bold text-lg mb-2">Счастливые клиенты</h3>
+                <p className="text-white/90 text-sm">Получили ключи от новой квартиры</p>
+              </div>
             </motion.div>
 
             <motion.div
@@ -445,12 +495,16 @@ export default function Home() {
             >
               <Image
                 src="/ph2.jpg"
-                alt="Фото 2"
+                alt="Команда профессионалов за работой"
                 width={400}
                 height={300}
-                className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-500"
+                className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/70 via-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+              <div className="absolute bottom-6 left-6 right-6 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
+                <h3 className="text-white font-bold text-lg mb-2">Наша команда</h3>
+                <p className="text-white/90 text-sm">Профессионалы с многолетним опытом</p>
+              </div>
             </motion.div>
 
             <motion.div
@@ -461,14 +515,42 @@ export default function Home() {
             >
               <Image
                 src="/ph3.jpg"
-                alt="Фото 3"
+                alt="Современный офис с удобной атмосферой"
                 width={400}
                 height={300}
-                className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-500"
+                className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-purple-900/70 via-purple-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+              <div className="absolute bottom-6 left-6 right-6 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
+                <h3 className="text-white font-bold text-lg mb-2">Комфортный офис</h3>
+                <p className="text-white/90 text-sm">Приятная атмосфера для консультаций</p>
+              </div>
             </motion.div>
           </div>
+
+          {/* CTA блок */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl p-8 lg:p-12 text-center text-white relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/50 to-purple-600/50"></div>
+            <div className="relative">
+              <h3 className="text-3xl lg:text-4xl font-bold mb-4">
+                Готовы стать нашим следующим успешным клиентом?
+              </h3>
+              <p className="text-xl mb-8 text-blue-100">
+                Получите бесплатную консультацию и узнайте свои возможности уже сегодня
+              </p>
+              <button
+                onClick={openModal}
+                className="bg-white text-blue-600 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+              >
+                Получить консультацию
+              </button>
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -479,18 +561,27 @@ export default function Home() {
         </h2>
         <LeadForm onSuccess={openThankYouModal} />
       </section>
-      {/* Блок 5 — Почему выбирают нас */}
-      <section className="py-12">
-        <div className="max-w-6xl mx-auto px-8">
+      {/* Секция преимуществ с современным дизайном */}
+      <section className="py-20 bg-gradient-to-br from-slate-50 to-blue-50/30">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl font-bold mb-8 text-gray-900 text-center">
+            <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
+              </svg>
+              Наши преимущества
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
               Почему выбирают нас
             </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Мы предлагаем лучшие условия кредитования в Казахстане
+            </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -500,19 +591,16 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="group relative"
             >
-              <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border-l-4 border-[#db6d2a] group-hover:scale-105">
-                <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-r from-brandYellow to-brandOrange rounded-full flex items-center justify-center text-2xl shadow-lg">
+              <div className="h-full bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border-b-4 border-blue-500 group-hover:-translate-y-2">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
                   💰
                 </div>
-                <div className="mt-4">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">
-                    Без первоначального взноса
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Получите кредит без необходимости вносить первоначальный
-                    взнос
-                  </p>
-                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  Без первоначального взноса
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Получите ипотечный кредит без необходимости вносить первоначальный взнос
+                </p>
               </div>
             </motion.div>
 
@@ -522,18 +610,16 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="group relative"
             >
-              <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border-l-4 border-[#db6d2a] group-hover:scale-105">
-                <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-r from-brandOrange to-[#da6d2a] rounded-full flex items-center justify-center text-2xl shadow-lg">
+              <div className="h-full bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border-b-4 border-emerald-500 group-hover:-translate-y-2">
+                <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
                   🏦
                 </div>
-                <div className="mt-4">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">
-                    До 8 млн тенге
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Без подтверждения дохода и справок
-                  </p>
-                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  До 8 млн тенге
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Максимальная сумма кредита без подтверждения дохода и справок
+                </p>
               </div>
             </motion.div>
 
@@ -543,18 +629,16 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="group relative"
             >
-              <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border-l-4 border-[#db6d2a] group-hover:scale-105">
-                <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-2xl shadow-lg">
+              <div className="h-full bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border-b-4 border-amber-500 group-hover:-translate-y-2">
+                <div className="w-16 h-16 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
                   ⭐
                 </div>
-                <div className="mt-4">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">
-                    Рейтинг 4.9
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    В 2GIS на основе более тысячи отзывов довольных клиентов
-                  </p>
-                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  Рейтинг 4.9
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Высокий рейтинг в 2GIS на основе более тысячи отзывов клиентов
+                </p>
               </div>
             </motion.div>
 
@@ -564,18 +648,16 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="group relative"
             >
-              <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border-l-4 border-[#db6d2a] group-hover:scale-105">
-                <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-2xl shadow-lg">
+              <div className="h-full bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border-b-4 border-purple-500 group-hover:-translate-y-2">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
                   🔄
                 </div>
-                <div className="mt-4">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">
-                    С действующими кредитами
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Получите новый кредит даже при наличии других займов
-                  </p>
-                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  С действующими кредитами
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Получите новый кредит даже при наличии других займов
+                </p>
               </div>
             </motion.div>
           </div>
@@ -660,97 +742,120 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
-      {/* Блок 6 — Футер */}
-      <footer className="py-12 bg-gradient-to-br from-gray-500 via-gray-700 to-black text-white">
-        <div className="max-w-6xl mx-auto px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Современный футер */}
+      <footer className="bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 text-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+            
             {/* Компания */}
-            <div className="space-y-4">
-              <div className="font-bold text-2xl text-brandYellow">
-                GARANT IPOTEKI
+            <div className="lg:col-span-2 space-y-6">
+              <div className="space-y-4">
+                <h3 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+                  GARANT IPOTEKI
+                </h3>
+                <p className="text-gray-300 text-lg leading-relaxed max-w-md">
+                  Ведущая компания по ипотечному кредитованию в Казахстане. Помогаем осуществить мечту о собственном жилье.
+                </p>
               </div>
-              <div className="text-gray-300 text-sm">
-                <p>БИН: 240840010906</p>
-                <p>г. Астана, 2025</p>
-                <p>Головной офис:</p>
-                <p>Проспект Б. Момышұлы 2/5</p>
+              
+              <div className="bg-gray-800/50 rounded-2xl p-6 space-y-3">
+                <h4 className="font-semibold text-blue-400 mb-3">Реквизиты компании</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-300">
+                  <div>БИН: 240840010906</div>
+                  <div>г. Астана, 2025</div>
+                </div>
+                <div className="text-gray-300 text-sm">
+                  <p className="font-medium">Головной офис:</p>
+                  <p>Проспект Б. Момышұлы 2/5</p>
+                </div>
               </div>
             </div>
 
             {/* Контакты */}
-            <div className="space-y-4">
-              <h3 className="font-semibold text-lg text-brandYellow">
-                Контакты
-              </h3>
-              <div className="space-y-2 text-gray-300">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">📞</span>
-                  <span>+7 707 575 97 07</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">📧</span>
-                  <span>maksatzhusupov@mail.ru</span>
-                </div>
+            <div className="space-y-6">
+              <h3 className="text-xl font-bold text-blue-400">Контакты</h3>
+              <div className="space-y-4">
+                <a 
+                  href="tel:+77075759707"
+                  className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors duration-300 group"
+                >
+                  <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-700 transition-colors duration-300">
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-semibold">+7 707 575 97 07</div>
+                    <div className="text-sm text-gray-400">Основной номер</div>
+                  </div>
+                </a>
+                
+                <a 
+                  href="mailto:maksatzhusupov@mail.ru"
+                  className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors duration-300 group"
+                >
+                  <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center group-hover:bg-emerald-700 transition-colors duration-300">
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                      <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-semibold break-all">maksatzhusupov@mail.ru</div>
+                    <div className="text-sm text-gray-400">Email для связи</div>
+                  </div>
+                </a>
               </div>
             </div>
 
             {/* Социальные сети */}
-            <div className="space-y-4">
-              <h3 className="font-semibold text-lg text-brandYellow">
-                Напишите нам
-              </h3>
-              <div className="flex gap-4">
+            <div className="space-y-6">
+              <h3 className="text-xl font-bold text-blue-400">Мы в соцсетях</h3>
+              <div className="space-y-4">
                 <a
                   href="https://wa.me/77075759707"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110"
+                  className="flex items-center gap-4 text-gray-300 hover:text-green-400 transition-colors duration-300 group"
                 >
-                  <svg
-                    className="w-6 h-6"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488" />
-                  </svg>
+                  <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center group-hover:bg-green-700 transition-all duration-300 group-hover:scale-110">
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">WhatsApp</span>
                 </a>
+                
                 <a
                   href="https://www.instagram.com/garant_ipoteki.astana/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white p-3 rounded-full transition-all duration-300 hover:scale-110"
+                  className="flex items-center gap-4 text-gray-300 hover:text-pink-400 transition-colors duration-300 group"
                 >
-                  <svg
-                    className="w-6 h-6"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                  </svg>
-                </a>
-                <a
-                  href="tel:+77075759707"
-                  className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110"
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19c-.55 0-.99.45-.99.99 0 9.36 7.6 16.96 16.96 16.96.54 0 .99-.45.99-.99v-3.5c0-.54-.45-.99-.99-.99z" />
-                  </svg>
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center group-hover:from-purple-600 group-hover:to-pink-600 transition-all duration-300 group-hover:scale-110">
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                    </svg>
+                  </div>
+                  <span className="font-medium">Instagram</span>
                 </a>
               </div>
             </div>
           </div>
 
-          <div className="mt-8 pt-8 border-t border-gray-700 text-center">
-            <button
-              onClick={openPrivacyModal}
-              className="text-gray-400 hover:text-brandYellow transition-colors duration-300 text-sm"
-            >
-              Политика конфиденциальности
-            </button>
+          {/* Разделитель и нижняя часть */}
+          <div className="mt-12 pt-8 border-t border-gray-700">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div className="text-gray-400 text-sm">
+                © 2025 GARANT IPOTEKI. Все права защищены.
+              </div>
+              <button
+                onClick={openPrivacyModal}
+                className="text-gray-400 hover:text-blue-400 transition-colors duration-300 text-sm underline-offset-4 hover:underline"
+              >
+                Политика конфиденциальности
+              </button>
+            </div>
           </div>
         </div>
       </footer>
@@ -1064,7 +1169,7 @@ const OfficeCard = ({
   );
 };
 
-// --- Карточка менеджера ---
+// --- Современная карточка менеджера ---
 interface ManagerCardProps {
   name: string;
   position: string;
@@ -1079,31 +1184,58 @@ const ManagerCard = ({
   photo,
 }: ManagerCardProps) => {
   return (
-    <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 group overflow-hidden border-l-4 border-[#da6d2a] relative w-80 h-80">
-      {/* Декоративный элемент */}
-      <div className="absolute top-0 right-0 w-16 h-16 rounded-full bg-brandYellow/20 -translate-y-8 translate-x-8 group-hover:scale-110 transition-transform duration-500"></div>
-
-      <div className="relative z-10 text-center h-full flex flex-col justify-center">
-        <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-brandYellow to-brandOrange p-1 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
-          <Image
-            src={photo}
-            alt={name}
-            width={96}
-            height={96}
-            className="w-full h-full rounded-full object-cover"
-          />
+    <motion.div 
+      whileHover={{ y: -8 }}
+      className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 group overflow-hidden relative w-80 h-96"
+    >
+      {/* Градиентный фон при ховере */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl"></div>
+      
+      <div className="relative z-10 text-center h-full flex flex-col justify-between">
+        <div className="space-y-6">
+          {/* Фото с современным обрамлением */}
+          <div className="w-28 h-28 mx-auto relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 rounded-full p-1 group-hover:scale-110 transition-transform duration-300">
+              <div className="bg-white rounded-full p-1">
+                <Image
+                  src={photo}
+                  alt={name}
+                  width={112}
+                  height={112}
+                  className="w-full h-full rounded-full object-cover"
+                />
+              </div>
+            </div>
+            {/* Статус индикатор */}
+            <div className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+            </div>
+          </div>
+          
+          {/* Информация */}
+          <div className="space-y-3">
+            <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
+              {name}
+            </h3>
+            <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+              </svg>
+              {position}
+            </div>
+          </div>
         </div>
-        <h3 className="text-xl font-bold text-[#da6d2a] mb-2 group-hover:scale-105 transition-transform duration-300">
-          {name}
-        </h3>
-        <p className="text-brandOrange font-semibold mb-3 text-sm">
-          {position}
-        </p>
-        <div className="flex items-center justify-center gap-2 text-gray-600 text-sm">
-          <span className="text-brandOrange">⏱️</span>
-          <span>{experience}</span>
+        
+        {/* Опыт работы */}
+        <div className="bg-gray-50 group-hover:bg-white rounded-2xl p-4 transition-colors duration-300 border group-hover:border-blue-200">
+          <div className="flex items-center justify-center gap-2 text-gray-600">
+            <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="font-semibold">Опыт: {experience}</span>
+          </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
