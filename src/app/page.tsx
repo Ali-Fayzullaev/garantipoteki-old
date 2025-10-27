@@ -1214,7 +1214,7 @@ const ManagerCard = ({
           
           {/* Информация */}
           <div className="space-y-3">
-            <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
+            <h3 className="text-xl mt-10 font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
               {name}
             </h3>
             <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
