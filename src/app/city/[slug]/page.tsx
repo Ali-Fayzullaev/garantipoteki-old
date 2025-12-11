@@ -549,7 +549,7 @@ export default function CityPage({
               </motion.div>
             </motion.div>
 
-            {/* Правая колонка - видео */}
+            {/* Правая колонка - изображение вместо видео */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -566,43 +566,24 @@ export default function CityPage({
                   }}
                 ></div>
 
-                {/* Видео контейнер */}
+                {/* Изображение контейнер */}
                 <div className="relative bg-white rounded-3xl p-2 shadow-2xl shadow-black/10">
-                  <video
-                    src="/video.mp4"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-80 lg:h-96 object-cover rounded-2xl"
-                    onLoadedData={(e) => {
-                      // Принудительно запускаем воспроизведение при загрузке данных
-                      e.currentTarget.play().catch(() => {
-                        console.log(
-                          "Автовоспроизведение заблокировано браузером"
-                        );
-                      });
-                    }}
-                    onCanPlay={(e) => {
-                      // Дополнительная гарантия воспроизведения
-                      e.currentTarget.play().catch(() => {
-                        console.log(
-                          "Автовоспроизведение заблокировано браузером"
-                        );
-                      });
-                    }}
-                  />
-
-                  {/* Условно отображаем плей кнопку только если видео не воспроизводится */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0">
-                    <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
-                      <svg
-                        className="w-6 h-6 text-secondary-600 ml-1"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M8 5v10l8-5-8-5z" />
-                      </svg>
+                  <div className="relative w-full h-80 lg:h-96 bg-gradient-to-br from-blue-50 to-orange-50 rounded-2xl overflow-hidden">
+                    <Image
+                      src="/ph1.jpg"
+                      alt="Счастливые клиенты GARANT IPOTEKI"
+                      width={500}
+                      height={400}
+                      className="w-full h-full object-cover"
+                      priority
+                    />
+                    
+                    {/* Overlay с информацией */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end p-6">
+                      <div className="text-white">
+                        <h3 className="text-xl font-bold mb-2">Наши довольные клиенты</h3>
+                        <p className="text-white/90">Уже получили ключи от новых квартир</p>
+                      </div>
                     </div>
                   </div>
                 </div>

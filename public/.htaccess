@@ -1,0 +1,84 @@
+# Настройки для Next.js статических файлов
+<IfModule mod_mime.c>
+    # JavaScript
+    AddType application/javascript .js .mjs
+    
+    # CSS
+    AddType text/css .css
+    
+    # Видео
+    AddType video/mp4 .mp4
+    
+    # Изображения
+    AddType image/webp .webp
+    AddType image/avif .avif
+</IfModule>
+
+# Кэширование статических файлов
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Изображения
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/avif "access plus 1 year"
+    
+    # CSS и JavaScript
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    
+    # Видео файлы
+    ExpiresByType video/mp4 "access plus 1 month"
+    
+    # HTML файлы (короткое кэширование)
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# Сжатие файлов
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+# Правила для Next.js роутинга
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Redirect trailing slashes
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.+)/$ /$1 [R=301,L]
+    
+    # Handle Next.js static files
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} ^/_next/
+    RewriteRule ^(.*)$ /404 [L]
+    
+    # Handle API routes
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} ^/api/
+    RewriteRule ^(.*)$ /index.php [L]
+</IfModule>
+
+# Заголовки безопасности
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # CORS для статических файлов
+    <FilesMatch "\.(js|css|woff|woff2|ttf|svg|ico)$">
+        Header set Access-Control-Allow-Origin "*"
+    </FilesMatch>
+</IfModule>
