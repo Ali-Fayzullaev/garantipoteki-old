@@ -46,6 +46,11 @@ const CITY_CONFIG = {
     name: "Костанай",
     title: "GARANT IPOTEKI - Костанай",
   },
+  petropavlovsk: {
+    code: "oawmSexI", // Замените на реальный код если есть
+    name: "Петропавловск",
+    title: "GARANT IPOTEKI - Петропавловск",
+  },
   // Добавьте другие города здесь
 };
 
@@ -674,6 +679,21 @@ export default function CityPage({
                   phone="+7 777 043 89 12"
                   color="brandYellow"
                   mapLink="https://go.2gis.com/oqJeX"
+                />
+              </motion.div>
+            )}
+            {slug === "petropavlovsk" && (
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <OfficeCard
+                  city="Петропавловск"
+                  address="Сутюшева 60, БЦ «Квартал», 3 этаж, кабинет 3.14"
+                  phone="+7 708 153 7750"
+                  color="brandYellow"
+                  mapLink="https://go.2gis.com/xSuoa"
                 />
               </motion.div>
             )}
