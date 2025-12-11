@@ -3,10 +3,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Оптимизация для продакшена
-  experimental: {
-    optimizeCss: true,
-  },
+  // Убираем экспериментальную функцию optimizeCss
   // Настройки для статических файлов
   images: {
     domains: ['garantipoteki-astana.kz'],
