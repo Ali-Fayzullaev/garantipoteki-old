@@ -430,6 +430,7 @@ export default function CityPage({
               width={160}
               height={44}
               className="h-11 w-auto object-contain"
+              style={{ width: "auto", height: "2.75rem" }}
               priority
             />
           </motion.div>

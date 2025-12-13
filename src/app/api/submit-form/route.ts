@@ -81,8 +81,33 @@ function getCityName(cityCode?: string): string {
   return cityNames[cityCode] || 'Астана';
 }
 
+// Функция для добавления CORS заголовков
+function addCorsHeaders(response: NextResponse) {
+  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  response.headers.set('Access-Control-Max-Age', '86400');
+  return response;
+}
+
+// Обработка OPTIONS запросов для CORS
+export async function OPTIONS(request: NextRequest) {
+  const response = new NextResponse(null, { status: 200 });
+  return addCorsHeaders(response);
+}
+
 export async function POST(request: NextRequest) {
   try {
+    // Проверка Content-Type
+    const contentType = request.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const response = NextResponse.json(
+        { success: false, message: 'Content-Type должен быть application/json' },
+        { status: 400 }
+      );
+      return addCorsHeaders(response);
+    }
+
     const body = await request.json();
     const { type, name, phone, date, time, cityCode, service } = body;
 
@@ -90,28 +115,31 @@ export async function POST(request: NextRequest) {
 
     // Валидация обязательных полей
     if (!name || !phone) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { success: false, message: 'Имя и телефон обязательны для заполнения' },
         { status: 400 }
       );
+      return addCorsHeaders(response);
     }
 
     // Валидация номера телефона
     const phoneRegex = /^[\+]?[7-8]?[0-9\s\-\(\)]{10,15}$/;
     if (!phoneRegex.test(phone.replace(/\s/g, ''))) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { success: false, message: 'Введите корректный номер телефона' },
         { status: 400 }
       );
+      return addCorsHeaders(response);
     }
 
     // Валидация даты для видеосозвона
     if (type === 'schedule') {
       if (!date || !time) {
-        return NextResponse.json(
+        const response = NextResponse.json(
           { success: false, message: 'Для записи на видеосозвон необходимо указать дату и время' },
           { status: 400 }
         );
+        return addCorsHeaders(response);
       }
     }
 
@@ -166,63 +194,105 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString()
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       message: type === 'form' 
         ? 'Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.' 
         : 'Заявка на видеосозвон успешно отправлена! Мы подтвердим время созвона.'
     });
+    
+    return addCorsHeaders(response);
 
   } catch (error) {
     console.error('Error submitting form:', error);
-    return NextResponse.json(
-      { success: false, message: 'Произошла ошибка при отправке заявки. Пожалуйста, попробуйте еще раз.' },
-      { status: 500 }
+    
+    // Детальная обработка разных типов ошибок
+    let errorMessage = 'Произошла ошибка при отправке заявки. Пожалуйста, попробуйте еще раз.';
+    let statusCode = 500;
+    
+    if (error instanceof SyntaxError) {
+      errorMessage = 'Некорректный формат данных';
+      statusCode = 400;
+    } else if (error instanceof Error) {
+      if (error.message.includes('fetch')) {
+        errorMessage = 'Ошибка подключения к WhatsApp API';
+      }
+    }
+    
+    const response = NextResponse.json(
+      { success: false, message: errorMessage },
+      { status: statusCode }
     );
+    
+    return addCorsHeaders(response);
   }
 }
 
 // GET endpoint для тестирования
 export async function GET(request: NextRequest) {
-  const url = new URL(request.url);
-  const action = url.searchParams.get('action');
-  const groupId = url.searchParams.get('groupId');
-  const cityCode = url.searchParams.get('cityCode');
+  try {
+    const url = new URL(request.url);
+    const action = url.searchParams.get('action');
+    const groupId = url.searchParams.get('groupId');
+    const cityCode = url.searchParams.get('cityCode');
 
-  if (action === 'test' && groupId) {
-    const testMessage = `🧪 Тест сообщения
+    if (action === 'test' && groupId) {
+      const testMessage = `🧪 Тест сообщения
 📅 ${new Date().toLocaleDateString('ru-RU')}
 ⏰ ${new Date().toLocaleTimeString('ru-RU')}`;
-    
-    try {
-      const result = await sendToWhatsApp(testMessage, groupId);
-      return NextResponse.json({ success: true, result });
-    } catch (error) {
-      return NextResponse.json({ success: false, error: error instanceof Error ? error.message : 'Unknown error' });
+      
+      try {
+        const result = await sendToWhatsApp(testMessage, groupId);
+        const response = NextResponse.json({ success: true, result });
+        return addCorsHeaders(response);
+      } catch (error) {
+        const response = NextResponse.json({ 
+          success: false, 
+          error: error instanceof Error ? error.message : 'Unknown error' 
+        });
+        return addCorsHeaders(response);
+      }
     }
-  }
 
-  if (action === 'testCity' && cityCode) {
-    const groupId = getCityGroupId(cityCode);
-    const cityName = getCityName(cityCode);
-    const testMessage = `🧪 Тест для города ${cityName}
+    if (action === 'testCity' && cityCode) {
+      const groupId = getCityGroupId(cityCode);
+      const cityName = getCityName(cityCode);
+      const testMessage = `🧪 Тест для города ${cityName}
 📅 ${new Date().toLocaleDateString('ru-RU')}
 ⏰ ${new Date().toLocaleTimeString('ru-RU')}`;
-    
-    try {
-      const result = await sendToWhatsApp(testMessage, groupId);
-      return NextResponse.json({ success: true, cityCode, cityName, groupId, result });
-    } catch (error) {
-      return NextResponse.json({ success: false, error: error instanceof Error ? error.message : 'Unknown error' });
+      
+      try {
+        const result = await sendToWhatsApp(testMessage, groupId);
+        const response = NextResponse.json({ success: true, cityCode, cityName, groupId, result });
+        return addCorsHeaders(response);
+      } catch (error) {
+        const response = NextResponse.json({ 
+          success: false, 
+          error: error instanceof Error ? error.message : 'Unknown error' 
+        });
+        return addCorsHeaders(response);
+      }
     }
-  }
 
-  return NextResponse.json({ 
-    message: 'API для тестирования WhatsApp',
-    availableActions: [
-      'GET /api/submit-form?action=test&groupId=XXX - тест конкретной группы',
-      'GET /api/submit-form?action=testCity&cityCode=petropavlovsk - тест группы города',
-    ],
-    cityGroups: CITY_WHATSAPP_GROUPS
-  });
+    const response = NextResponse.json({ 
+      message: 'API для тестирования WhatsApp',
+      status: 'active',
+      availableActions: [
+        'GET /api/submit-form?action=test&groupId=XXX - тест конкретной группы',
+        'GET /api/submit-form?action=testCity&cityCode=petropavlovsk - тест группы города',
+      ],
+      cityGroups: CITY_WHATSAPP_GROUPS
+    });
+    
+    return addCorsHeaders(response);
+
+  } catch (error) {
+    console.error('GET error:', error);
+    const response = NextResponse.json({ 
+      success: false, 
+      error: 'Ошибка обработки запроса' 
+    }, { status: 500 });
+    
+    return addCorsHeaders(response);
+  }
 }

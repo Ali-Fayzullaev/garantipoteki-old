@@ -3,7 +3,6 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Убираем экспериментальную функцию optimizeCss
   // Настройки для статических файлов
   images: {
     domains: ['garantipoteki-astana.kz'],
@@ -43,11 +42,34 @@ const nextConfig = {
   // Настройки для лучшей производительности
   poweredByHeader: false,
   compress: true,
-  // Заголовки безопасности
+  // Заголовки безопасности и CORS
   async headers() {
     return [
       {
-        source: '/(.*)',
+        // Применяем CORS заголовки к API маршрутам
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, POST, PUT, DELETE, OPTIONS',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'Content-Type, Authorization, X-Requested-With',
+          },
+          {
+            key: 'Access-Control-Max-Age',
+            value: '86400',
+          },
+        ],
+      },
+      {
+        // Заголовки безопасности для всех остальных маршрутов
+        source: '/((?!api).*)',
         headers: [
           {
             key: 'X-Frame-Options',

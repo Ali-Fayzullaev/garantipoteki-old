@@ -1,5 +1,5 @@
 // layout.tsx - Современный дизайн
-import type { Metadata } from "next"; 
+import type { Metadata, Viewport } from "next"; 
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
@@ -61,12 +61,14 @@ export const metadata: Metadata = {
   },
   
   manifest: "/site.webmanifest",
+};
+
+// Отдельная функция для viewport согласно Next.js 14/15
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
   themeColor: "#3b82f6",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-  },
 };
 
 export default function RootLayout({
@@ -84,14 +86,6 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        
-        {/* Preload критических ресурсов */}
-        <link 
-          rel="preload" 
-          href="/logo.png" 
-          as="image" 
-          type="image/png" 
-        />
         
         {/* DNS Prefetch для улучшения скорости */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
