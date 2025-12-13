@@ -26,9 +26,10 @@ function formatPhone(value: string) {
 
 interface ScheduleFormProps {
   onSuccess?: () => void;
+  cityCode?: string; // Добавляем cityCode
 }
 
-function ScheduleForm({ onSuccess }: ScheduleFormProps) {
+function ScheduleForm({ onSuccess, cityCode }: ScheduleFormProps) {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -77,6 +78,7 @@ function ScheduleForm({ onSuccess }: ScheduleFormProps) {
           phone: formData.phone,
           date: formData.date,
           time: formData.time,
+          cityCode: cityCode, // Передаем cityCode
         }),
       });
 

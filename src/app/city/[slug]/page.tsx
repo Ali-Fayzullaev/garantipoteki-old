@@ -10,6 +10,9 @@ import "swiper/css/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { createDeal, getServices, updateDeal, updateTxt } from "@/api/api";
 import LeadForm from "@/components/LeadForm";
+import LeadFormKokshetau from "@/components/LeadFormKokshetau";
+import LeadFormKostanay from "@/components/LeadFormKostanay";
+import LeadFormPetropavlovsk from "@/components/LeadFormPetropavlovsk";
 import OfficesCarousel from "@/components/OfficesCarousel";
 
 type ServiceType = {
@@ -37,17 +40,17 @@ function formatPhoneNumber(phone: string): string {
 // Конфигурация городов
 const CITY_CONFIG = {
   kokshetau: {
-    code: "fk8aEdbg",
+    code: "kokshetau",
     name: "Кокшетау",
     title: "GARANT IPOTEKI - Кокшетау",
   },
   kostanay: {
-    code: "oawmSexI",
+    code: "kostanay",
     name: "Костанай",
     title: "GARANT IPOTEKI - Костанай",
   },
   petropavlovsk: {
-    code: "oawmSexI", // Замените на реальный код если есть
+    code: "petropavlovsk", // Исправляем код для Петропавловска
     name: "Петропавловск",
     title: "GARANT IPOTEKI - Петропавловск",
   },
@@ -220,6 +223,20 @@ const ManagerCard = ({
   );
 };
 
+// Функция для получения нужной формы по городу
+const getCityLeadForm = (slug: string) => {
+  switch (slug) {
+    case "kokshetau":
+      return LeadFormKokshetau;
+    case "kostanay":
+      return LeadFormKostanay;
+    case "petropavlovsk":
+      return LeadFormPetropavlovsk;
+    default:
+      return LeadForm;
+  }
+};
+
 export default function CityPage({
   params,
 }: {
@@ -239,6 +256,7 @@ export default function CityPage({
   const [services, setServices] = useState<ServiceType[]>([]);
 
   const cityConfig = CITY_CONFIG[slug as keyof typeof CITY_CONFIG];
+  const CityLeadForm = getCityLeadForm(slug);
 
   if (!cityConfig) {
     return (
@@ -577,12 +595,16 @@ export default function CityPage({
                       className="w-full h-full object-cover"
                       priority
                     />
-                    
+
                     {/* Overlay с информацией */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end p-6">
                       <div className="text-white">
-                        <h3 className="text-xl font-bold mb-2">Наши довольные клиенты</h3>
-                        <p className="text-white/90">Уже получили ключи от новых квартир</p>
+                        <h3 className="text-xl font-bold mb-2">
+                          Наши довольные клиенты
+                        </h3>
+                        <p className="text-white/90">
+                          Уже получили ключи от новых квартир
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -936,7 +958,7 @@ export default function CityPage({
         <h2 className="text-3xl font-bold mb-8 text-gray-900 text-center">
           Бесплатная консультация в {cityConfig.name}
         </h2>
-        <LeadForm onSuccess={openThankYouModal} cityCode={cityConfig.code} />
+        <CityLeadForm onSuccess={openThankYouModal} />
       </section>
 
       {/* Секция преимуществ с современным дизайном */}
@@ -1283,7 +1305,7 @@ export default function CityPage({
               className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <LeadForm onSuccess={closeModal} cityCode={cityConfig.code} />
+              <CityLeadForm onSuccess={closeModal} />
             </motion.div>
           </motion.div>
         )}

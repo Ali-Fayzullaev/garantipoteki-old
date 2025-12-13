@@ -1,17 +1,8 @@
-// src/components/LeadForm.tsx - Современная версия
+// src/components/LeadFormKokshetau.tsx
 'use client';
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { createDeal, getServices, updateDeal, updateTxt } from '@/api/api';
-
-// Добавляем тип ServiceType
-type ServiceType = {
-  id: number;
-  company_id: number;
-  name: string;
-  order_number: number;
-};
 
 // Вспомогательные функции для форматирования телефона
 function formatPhone(value: string) {
@@ -25,10 +16,6 @@ function formatPhone(value: string) {
   return formatted;
 }
 
-function formatPhoneNumber(phone: string): string {
-  return phone.replace(/\D/g, "");
-}
-
 // Функции валидации
 function validatePhone(phone: string) {
   return /^\+7\s?\d{3}\s?\d{3}-\d{2}-\d{2}$/.test(phone);
@@ -38,20 +25,15 @@ function validateName(name: string) {
   return name.trim().length >= 2;
 }
 
-interface LeadFormProps {
+interface LeadFormKokshetauProps {
   onSuccess?: () => void;
-  cityCode?: string;
-  useWhatsApp?: boolean; // Новый проп для определения использования WhatsApp логики
 }
 
-function LeadForm({ onSuccess, cityCode, useWhatsApp = false }: LeadFormProps) {
-  const [step, setStep] = useState(1);
+function LeadFormKokshetau({ onSuccess }: LeadFormKokshetauProps) {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({ name: "", phone: "" });
-  const [dealId, setDealId] = useState<string | null>(null);
-  const [services, setServices] = useState<ServiceType[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,159 +52,41 @@ function LeadForm({ onSuccess, cityCode, useWhatsApp = false }: LeadFormProps) {
     }
 
     try {
-      if (useWhatsApp) {
-        // Новая логика с отправкой в WhatsApp
-        const response = await fetch('/api/submit-form', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            type: 'form',
-            name: formData.name,
-            phone: formData.phone,
-            cityCode: cityCode, // Передаем cityCode
-          }),
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result.message || 'Ошибка отправки заявки');
-        }
-
-        setIsLoading(false);
-        setSuccess(true);
-        setStep(3);
-        
-        setTimeout(() => {
-          setStep(4);
-          setTimeout(() => {
-            setStep(1);
-            setFormData({ name: "", phone: "" });
-            setServices([]);
-            setTimeout(() => {
-              if (onSuccess) {
-                onSuccess();
-              }
-            }, 1500);
-          }, 2000);
-        }, 2000);
-      } else {
-        // Старая логика для городских страниц
-        const deal = await createDeal({
-          name: formData.name,
-          phone_number: formatPhoneNumber(formData.phone),
-        }, cityCode);
-        
-        setDealId(deal.id);
-        const services = await getServices(cityCode);
-        setServices(services);
-
-        setIsLoading(false);
-        setStep(2);
-      }
-    } catch (e) {
-      setIsLoading(false);
-      if (useWhatsApp) {
-        setError(e instanceof Error ? e.message : "Произошла ошибка при отправке заявки");
-      } else {
-        // Для старой логики продолжаем к выбору услуг даже при ошибке
-        setStep(2);
-      }
-    }
-  };
-
-  const handleServiceSelect = async (service_id: number, service: string) => {
-    if (!dealId) return;
-    setIsLoading(true);
-    try {
-      // Передаем cityCode в updateDeal
-      await updateDeal(
-        { service_id: service_id, phone_number: formatPhoneNumber(formData.phone) },
-        dealId,
-        cityCode
-      );
-
-      // Также отправляем в WhatsApp с информацией об услуге
-      try {
-        await fetch('/api/submit-form', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            type: 'form',
-            name: formData.name,
-            phone: formData.phone,
-            cityCode: cityCode,
-            service: service, // Передаем выбранную услугу
-          }),
-        });
-      } catch (whatsAppError) {
-        console.error('WhatsApp send error:', whatsAppError);
-      }
-
-      try {
-        await updateTxt({
+      const response = await fetch('/api/submit-form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'form',
           name: formData.name,
           phone: formData.phone,
-          service: service,
-        });
-      } catch (error) {
-        console.error(error);
-      }
+          cityCode: 'kokshetau', // Жестко задан код города
+        }),
+      });
 
-      // Facebook Pixel
-      if (typeof window !== "undefined" && (window as any).fbq) {
-        (window as any).fbq("track", "Lead", {
-          content_name: service,
-          content_category: "form_submission",
-        });
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Ошибка отправки заявки');
       }
 
       setIsLoading(false);
       setSuccess(true);
-      setStep(3);
+      
       setTimeout(() => {
-        setStep(4);
-        setTimeout(() => {
-          setStep(1);
-          setFormData({
-            name: "",
-            phone: "",
-          });
-          setServices([]);
-          setTimeout(() => {
-            if (onSuccess) {
-              onSuccess();
-            }
-          }, 1500);
-        }, 2000);
-      }, 2000);
+        setFormData({ name: "", phone: "" });
+        setSuccess(false);
+        if (onSuccess) {
+          onSuccess();
+        }
+      }, 3000);
     } catch (e) {
       setIsLoading(false);
-      setStep(3);
-      setTimeout(() => {
-        setStep(4);
-        setTimeout(() => {
-          setStep(1);
-          setFormData({
-            name: "",
-            phone: "",
-          });
-          setServices([]);
-          setTimeout(() => {
-            if (onSuccess) {
-              onSuccess();
-            }
-          }, 1500);
-        }, 2000);
-      }, 2000);
+      setError(e instanceof Error ? e.message : "Произошла ошибка при отправке заявки");
     }
   };
 
-  // Показываем форму успеха
   if (success) {
     return (
       <motion.div
@@ -231,7 +95,6 @@ function LeadForm({ onSuccess, cityCode, useWhatsApp = false }: LeadFormProps) {
         transition={{ type: "spring", stiffness: 200 }}
         className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md relative overflow-hidden"
       >
-        {/* Праздничный градиент */}
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500"></div>
         
         <div className="text-center space-y-6">
@@ -265,10 +128,10 @@ function LeadForm({ onSuccess, cityCode, useWhatsApp = false }: LeadFormProps) {
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
                   </svg>
-                  <span className="font-semibold">Успешно отправлено</span>
+                  <span className="font-semibold">Отправлено в офис Кокшетау</span>
                 </div>
                 <p className="text-green-700">
-                  Заявка отправлена во все наши офисы. Наш специалист свяжется с вами в ближайшее время
+                  Наш специалист из Кокшетау свяжется с вами в ближайшее время
                 </p>
               </div>
             </motion.div>
@@ -279,7 +142,7 @@ function LeadForm({ onSuccess, cityCode, useWhatsApp = false }: LeadFormProps) {
               transition={{ delay: 0.8 }}
               className="text-gray-600 text-sm"
             >
-              Спасибо за доверие! 💙
+              Телефон офиса: +7 700 482 4545
             </motion.div>
           </div>
         </div>
@@ -287,7 +150,6 @@ function LeadForm({ onSuccess, cityCode, useWhatsApp = false }: LeadFormProps) {
     );
   }
 
-  // Основная форма
   return (
     <motion.div
       initial={{ opacity: 0, y: 30, scale: 0.95 }}
@@ -295,10 +157,8 @@ function LeadForm({ onSuccess, cityCode, useWhatsApp = false }: LeadFormProps) {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md relative overflow-hidden"
     >
-      {/* Декоративный градиент */}
       <div className="absolute top-0 left-0 w-full h-2 bg-brand-gradient"></div>
       
-      {/* Заголовок */}
       <div className="text-center mb-8">
         <motion.div 
           initial={{ scale: 0 }}
@@ -311,10 +171,10 @@ function LeadForm({ onSuccess, cityCode, useWhatsApp = false }: LeadFormProps) {
           </svg>
         </motion.div>
         <h3 className="text-2xl font-bold text-gray-900 mb-2">
-          Получить консультацию
+          Консультация в Кокшетау
         </h3>
         <p className="text-gray-600">
-          Наш эксперт свяжется с вами в течение 5 минут
+          Наш эксперт из офиса Кокшетау свяжется с вами в течение 5 минут
         </p>
       </div>
 
@@ -373,16 +233,23 @@ function LeadForm({ onSuccess, cityCode, useWhatsApp = false }: LeadFormProps) {
           </div>
         </div>
 
-        {error && (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
-            <div className="flex">
-              <svg className="w-5 h-5 text-red-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" />
-              </svg>
-              <p className="text-red-700 text-sm">{error}</p>
-            </div>
-          </div>
-        )}
+        <AnimatePresence>
+          {error && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg"
+            >
+              <div className="flex">
+                <svg className="w-5 h-5 text-red-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" />
+                </svg>
+                <p className="text-red-700 text-sm">{error}</p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <motion.button
           type="submit"
@@ -394,25 +261,24 @@ function LeadForm({ onSuccess, cityCode, useWhatsApp = false }: LeadFormProps) {
           {isLoading ? (
             <div className="flex items-center justify-center gap-3">
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              Отправка заявки...
+              Отправка в Кокшетау...
             </div>
           ) : (
             <span className="flex items-center justify-center gap-2">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
-              Получить консультацию
+              Получить консультацию в Кокшетау
             </span>
           )}
         </motion.button>
 
         <p className="text-xs text-gray-500 text-center">
-          Нажимая кнопку, вы соглашаетесь с 
-          <span className="text-secondary-600 underline cursor-pointer"> политикой конфиденциальности</span>
+          Заявка будет отправлена в офис Кокшетау: +7 700 482 4545
         </p>
       </form>
     </motion.div>
   );
 }
 
-export default LeadForm;
+export default LeadFormKokshetau;
