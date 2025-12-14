@@ -161,9 +161,17 @@ export async function POST(request: NextRequest) {
         message += `\n🎯 Услуга: ${service}`;
       }
       
-      message += `\n\n📅 Дата: ${new Date().toLocaleDateString('ru-RU')}
-⏰ Время: ${new Date().toLocaleTimeString('ru-RU')}`;
+      // Добавляем +5 часов к текущему времени (часовой пояс Казахстана)
+      const currentTime = new Date();
+      const kazakhstanTime = new Date(currentTime.getTime() + 5 * 60 * 60 * 1000);
+      
+      message += `\n\n📅 Дата: ${kazakhstanTime.toLocaleDateString('ru-RU')}
+⏰ Время: ${kazakhstanTime.toLocaleTimeString('ru-RU')}`;
     } else if (type === 'schedule') {
+      // Добавляем +5 часов к текущему времени для заявки на видеосозвон
+      const currentTime = new Date();
+      const kazakhstanTime = new Date(currentTime.getTime() + 5 * 60 * 60 * 1000);
+      
       message = `🎥 Новая заявка на видеосозвон!
 
 👤 Имя: ${name}
@@ -176,8 +184,8 @@ export async function POST(request: NextRequest) {
         message += `\n🎯 Услуга: ${service}`;
       }
       
-      message += `\n\n📅 Дата подачи: ${new Date().toLocaleDateString('ru-RU')}
-⏰ Время подачи: ${new Date().toLocaleTimeString('ru-RU')}`;
+      message += `\n\n📅 Дата подачи: ${kazakhstanTime.toLocaleDateString('ru-RU')}
+⏰ Время подачи: ${kazakhstanTime.toLocaleTimeString('ru-RU')}`;
     }
 
     // Отправляем в WhatsApp
