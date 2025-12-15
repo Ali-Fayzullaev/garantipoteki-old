@@ -17,6 +17,21 @@ const CITY_WHATSAPP_GROUPS: { [key: string]: string } = {
 // Функция для получения ID группы по коду города
 function getCityGroupId(cityCode?: string): string {
   if (!cityCode) return CITY_WHATSAPP_GROUPS.default;
+  
+  // Сопоставление кодов городов из CITY_CONFIG с названиями групп WhatsApp
+  const codeToCity: { [key: string]: string } = {
+    'fk8aEdbg': 'kokshetau',      // Кокшетау
+    'oawmSexI': 'kostanay',       // Костанай (первый код)
+    'petropavlovsk': 'petropavlovsk' // Петропавловск (если будет отдельный код)
+  };
+  
+  // Если код найден в сопоставлении, используем соответствующий город
+  const cityName = codeToCity[cityCode];
+  if (cityName && CITY_WHATSAPP_GROUPS[cityName]) {
+    return CITY_WHATSAPP_GROUPS[cityName];
+  }
+  
+  // Если cityCode уже является названием города, используем его напрямую
   return CITY_WHATSAPP_GROUPS[cityCode] || CITY_WHATSAPP_GROUPS.default;
 }
 
@@ -74,7 +89,10 @@ function getCityName(cityCode?: string): string {
   const cityNames: { [key: string]: string } = {
     'kokshetau': 'Кокшетау',
     'kostanay': 'Костанай',
-    'petropavlovsk': 'Петропавловск'
+    'petropavlovsk': 'Петропавловск',
+    // Добавляем сопоставления для кодов из CITY_CONFIG
+    'fk8aEdbg': 'Кокшетау',
+    'oawmSexI': 'Костанай'
   };
   
   if (!cityCode) return 'Астана';
@@ -165,8 +183,7 @@ export async function POST(request: NextRequest) {
       const currentTime = new Date();
       const kazakhstanTime = new Date(currentTime.getTime() + 5 * 60 * 60 * 1000);
       
-      message += `\n\n📅 Дата: ${kazakhstanTime.toLocaleDateString('ru-RU')}
-⏰ Время: ${kazakhstanTime.toLocaleTimeString('ru-RU')}`;
+      message += `\n\n📅 Дата: ${kazakhstanTime.toLocaleDateString('ru-RU')}`;
     } else if (type === 'schedule') {
       // Добавляем +5 часов к текущему времени для заявки на видеосозвон
       const currentTime = new Date();
@@ -184,8 +201,7 @@ export async function POST(request: NextRequest) {
         message += `\n🎯 Услуга: ${service}`;
       }
       
-      message += `\n\n📅 Дата подачи: ${kazakhstanTime.toLocaleDateString('ru-RU')}
-⏰ Время подачи: ${kazakhstanTime.toLocaleTimeString('ru-RU')}`;
+      message += `\n\n📅 Дата подачи: ${kazakhstanTime.toLocaleDateString('ru-RU')}`;
     }
 
     // Отправляем в WhatsApp

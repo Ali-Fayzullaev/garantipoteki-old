@@ -47,7 +47,7 @@ const CITY_CONFIG = {
     title: "GARANT IPOTEKI - Костанай",
   },
   petropavlovsk: {
-    code: "oawmSexI", // Замените на реальный код если есть
+    code: "petropavlovsk", // Уникальный код для Петропавловска
     name: "Петропавловск",
     title: "GARANT IPOTEKI - Петропавловск",
   },
@@ -936,7 +936,7 @@ export default function CityPage({
         <h2 className="text-3xl font-bold mb-8 text-gray-900 text-center">
           Бесплатная консультация в {cityConfig.name}
         </h2>
-        <LeadForm onSuccess={openThankYouModal} cityCode={cityConfig.code} />
+        <LeadForm onSuccess={openThankYouModal} cityCode={cityConfig.code} useWhatsApp={true} />
       </section>
 
       {/* Секция преимуществ с современным дизайном */}
@@ -1283,7 +1283,7 @@ export default function CityPage({
               className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <LeadForm onSuccess={closeModal} cityCode={cityConfig.code} />
+              <LeadForm onSuccess={closeModal} cityCode={cityConfig.code} useWhatsApp={true} />
             </motion.div>
           </motion.div>
         )}
