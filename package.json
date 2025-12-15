@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build && next export",
+    "build": "next build",
+    "build:fast": "NODE_ENV=production next build --no-lint",
+    "build:production": "npm ci --only=production && next build",
     "start": "next start -p 3050",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clean": "rm -rf .next node_modules package-lock.json"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",
