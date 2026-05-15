@@ -174,7 +174,7 @@ export default function RootLayout({
                 "addressCountry": "KZ"
               },
               "telephone": "+7-707-575-97-07",
-              "email": "maksatzhusupov@mail.ru",
+              "email": "gi_ipoteki_kz@mail.ru",
               "aggregateRating": {
                 "@type": "AggregateRating",
                 "ratingValue": "4.9",

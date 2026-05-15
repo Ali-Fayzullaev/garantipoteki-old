@@ -815,7 +815,7 @@ export default function Home() {
                 </a>
 
                 <a
-                  href="mailto:maksatzhusupov@mail.ru"
+                  href="mailto:gi_ipoteki_kz@mail.ru"
                   className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors duration-300 group"
                 >
                   <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center group-hover:bg-emerald-700 transition-colors duration-300">
@@ -830,7 +830,7 @@ export default function Home() {
                   </div>
                   <div>
                     <div className="font-semibold break-all">
-                      maksatzhusupov@mail.ru
+                      gi_ipoteki_kz@mail.ru
                     </div>
                     <div className="text-sm text-gray-400">Email для связи</div>
                   </div>
@@ -1030,7 +1030,7 @@ export default function Home() {
                     <strong>GARANT IPOTEKI</strong>
                   </p>
                   <p>Телефон: +7 707 575 97 07</p>
-                  <p>Email: maksatzhusupov@mail.ru</p>
+                  <p>Email: gi_ipoteki_kz@mail.ru</p>
                   <p>
                     Адрес: Проспект БАУЫРЖАН МОМЫШҰЛЫ, здание 2/5, г. Астана
                   </p>
